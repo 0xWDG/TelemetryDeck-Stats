@@ -1,4 +1,4 @@
-# TelemetryDeck Viewer
+# TelemetryDeck Stats
 
 A Swift application for viewing and interacting with the [TelemetryDeck](https://telemetrydeck.com) API.
 
