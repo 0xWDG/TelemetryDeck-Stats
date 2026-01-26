@@ -22,7 +22,7 @@ class APIClient: ObservableObject {
     @Published var organizations: [TDOrganization] = []
     @Published var selectedOrganization: TDOrganization?
     @Published var apps: TDApps?
-    @Published var insights: [TDInsight] = []
+    @Published var insights: TDInsights?
     @Published var isLoading = false
     @Published var errorMessage: String?
 
@@ -96,7 +96,7 @@ class APIClient: ObservableObject {
         organizations = []
         selectedOrganization = nil
         apps = nil
-        insights = []
+        insights = nil
     }
 
     // MARK: - User
@@ -269,38 +269,6 @@ class APIClient: ObservableObject {
             self.apps = fetchedApps
         }
     }
-
-    // MARK: - Insights
-
-    /// Fetch insights for a specific app
-    func fetchInsights(appID: String) async throws {
-        guard let token = authToken else {
-            throw APIError.notAuthenticated
-        }
-
-        isLoading = true
-        defer { isLoading = false }
-
-        let url = URL(string: "\(baseURL)v3/apps/\(appID)/insights")!
-        var request = URLRequest(url: url)
-        request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
-
-        let (data, response) = try await URLSession.shared.data(for: request)
-#if DEBUG
-        print("fetchInsights", "Request", request, "Data", String(data: data, encoding: .utf8), "HTTPResponse", response)
-#endif
-
-        guard let httpResponse = response as? HTTPURLResponse,
-              (200...299).contains(httpResponse.statusCode) else {
-            throw APIError.requestFailed
-        }
-
-        let fetchedInsights = try JSONDecoder().decode([TDInsight].self, from: data)
-
-        await MainActor.run {
-            self.insights = fetchedInsights
-        }
-    }
 }
 
 // MARK: - Models
@@ -455,41 +423,6 @@ struct TDOrganization: Codable, Identifiable {
  }
  */
 
-/* STATS
- curl 'https://api.telemetrydeck.com/api/v3/query/calculate-async/' \
- -X 'POST' \
- -H 'Content-Type: application/json' \
- -H 'Accept: application/json' \
- -H 'Authorization: Bearer 67KUM1E47YO7M0Q9KHYH329JNUAJA636QOLD34L08GYBFAQ63IFR34C9EKC6RPNAO7UD5TNMRKABTQ0KTUUYGIPV440QU3GZLJNO7GP0NJ3AO02I382Y9AZ0LLN8PQX2' \
- -H 'Sec-Fetch-Site: same-site' \
- -H 'Accept-Language: nl-NL,nl;q=0.9' \
- -H 'Accept-Encoding: gzip, deflate, br' \
- -H 'Sec-Fetch-Mode: cors' \
- -H 'Origin: https://dashboard.telemetrydeck.com' \
- -H 'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.2 Safari/605.1.15' \
- -H 'Content-Length: 470' \
- -H 'Sec-Fetch-Dest: empty' \
- -H 'Priority: u=3, i' \
- -H 'td-organization-id: nl.wesleydegroot' \
- --data-raw '{"dataSource":"nl.wesleydegroot","aggregations":[{"type":"userCount"}],"filter":{"type":"and","fields":[{"type":"selector","dimension":"appID","value":"1058BF03-D5EF-4177-A789-395813F5F47D"},{"type":"selector","dimension":"isTestMode","value":"false"}]},"granularity":"day","queryType":"timeseries","relativeIntervals":[{"beginningDate":{"component":"day","offset":-30,"position":"beginning"},"endDate":{"component":"day","offset":0,"position":"end"}}],"testMode":false}'
-
- ....
-
- result:
- {
- "calculationDuration": 0.06190061569213867,
- "calculationFinishedAt": "2026-01-25T21:22:20+0000",
- "result": {
- "rows": [
- {
- "result": {
- "Users": 27
- },
- "timestamp": "2025-12-26T00:00:00+0000"
- },
- ....
- // */
-
 struct TDApps: Codable, Identifiable {
     let id: String
     let apps: [TDApp]
@@ -519,87 +452,206 @@ struct TDApp: Codable, Identifiable {
     }
 }
 
+
+/* STATS
+ curl 'https://api.telemetrydeck.com/api/v3/query/calculate-async/' \
+ -X 'POST' \
+ -H 'Content-Type: application/json' \
+ -H 'Accept: application/json' \
+ -H 'Authorization: Bearer 67KUM1E47YO7M0Q9KHYH329JNUAJA636QOLD34L08GYBFAQ63IFR34C9EKC6RPNAO7UD5TNMRKABTQ0KTUUYGIPV440QU3GZLJNO7GP0NJ3AO02I382Y9AZ0LLN8PQX2' \
+ -H 'Sec-Fetch-Site: same-site' \
+ -H 'Accept-Language: nl-NL,nl;q=0.9' \
+ -H 'Accept-Encoding: gzip, deflate, br' \
+ -H 'Sec-Fetch-Mode: cors' \
+ -H 'Origin: https://dashboard.telemetrydeck.com' \
+ -H 'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.2 Safari/605.1.15' \
+ -H 'Content-Length: 470' \
+ -H 'Sec-Fetch-Dest: empty' \
+ -H 'Priority: u=3, i' \
+ -H 'td-organization-id: nl.wesleydegroot' \
+ --data-raw '{"dataSource":"nl.wesleydegroot","aggregations":[{"type":"userCount"}],"filter":{"type":"and","fields":[{"type":"selector","dimension":"appID","value":"1058BF03-D5EF-4177-A789-395813F5F47D"},{"type":"selector","dimension":"isTestMode","value":"false"}]},"granularity":"day","queryType":"timeseries","relativeIntervals":[{"beginningDate":{"component":"day","offset":-30,"position":"beginning"},"endDate":{"component":"day","offset":0,"position":"end"}}],"testMode":false}'
+
+ ....
+
+ result:
+ {
+ "calculationDuration": 0.06190061569213867,
+ "calculationFinishedAt": "2026-01-25T21:22:20+0000",
+ "result": {
+ "rows": [
+    {
+    "result": {
+        "Users": 27
+    },
+    "timestamp": "2025-12-26T00:00:00+0000"
+ },
+ ....
+ // */
+
+struct TDInsights: Codable, Identifiable {
+    let result: TDInsightRow
+    let calculationFinishedAt: String
+
+    var id: Int { calculationFinishedAt.hashValue }
+}
+
+struct TDInsightRow: Codable, Identifiable {
+    let rows: [TDInsight]
+
+    var id: Int { rows.count.hashValue }
+}
+
 struct TDInsight: Codable, Identifiable {
-    let id: String
-    let title: String
-    let description: String?
-    let displayMode: String?
+    var id: Int { timestamp.hashValue }
+
+    let result: TDInsightResult
+    let timestamp: Date
+
+    struct TDInsightResult: Codable {
+        let Users: Int
+    }
+}
+
+extension APIClient {
+    // MARK: - Insights
+
+    /// Fetch insights for a specific app
+    func fetchInsights(appID: String = "1058BF03-D5EF-4177-A789-395813F5F47D") async throws {
+        guard let token = authToken else {
+            throw APIError.notAuthenticated
+        }
+
+        isLoading = true
+        defer { isLoading = false }
+
+        let url = URL(string: "\(baseURL)v3/query/calculate-async/")!
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        // "dataSource":"nl.wesleydegroot",
+        request.httpBody = """
+         {"aggregations":[{"type":"userCount"}],"filter":{"type":"and","fields":[{"type":"selector","dimension":"appID","value":"\(appID)"},{"type":"selector","dimension":"isTestMode","value":"false"}]},"granularity":"day","queryType":"timeseries","relativeIntervals":[{"beginningDate":{"component":"day","offset":-30,"position":"beginning"},"endDate":{"component":"day","offset":0,"position":"end"}}],"testMode":false}    
+        """.data(using: .utf8)
+
+        let (data, response) = try await URLSession.shared.data(for: request)
+#if DEBUG
+        print("fetchInsights", "Request", request, "Data", String(data: data, encoding: .utf8), "HTTPResponse", response)
+#endif
+
+        guard let httpResponse = response as? HTTPURLResponse,
+              (200...299).contains(httpResponse.statusCode) else {
+            throw APIError.requestFailed
+        }
+
+        let taskId = try JSONDecoder().decode(TDTaskId.self, from: data)
+        print(taskId)
+
+        try? await Task.sleep(for: .seconds(5))
+
+        // Fetch data...
+        let url2 = URL(string: "\(baseURL)v3/task/\(taskId.queryTaskID)/lastSuccessfulValue/")!
+        var request2 = URLRequest(url: url2)
+        request2.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+
+        let (data2, response2) = try await URLSession.shared.data(for: request2)
+#if DEBUG
+        print("runQuery", "Request2", request2, "Data", String(data: data2, encoding: .utf8), "HTTPResponse", response2)
+#endif
+
+        guard let httpResponse = response2 as? HTTPURLResponse,
+              (200...299).contains(httpResponse.statusCode) else {
+            throw APIError.requestFailed
+        }
+
+        let formatter = DateFormatter()
+        formatter.locale = Locale(identifier: "en_US_POSIX")
+        formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
+        let decoder = JSONDecoder()
+        decoder.dateDecodingStrategy = .formatted(formatter)
+
+        let fetchedInsights = try decoder.decode(TDInsights.self, from: data2)
+        print("fetchedInsights", fetchedInsights)
+
+        await MainActor.run {
+            self.insights = fetchedInsights
+        }
+    }
 }
 
 // MARK: - Widget Data Model
 
-/// Data structure for sharing widget information between app and widget
-struct TDWidgetData: Codable {
-    let appName: String
-    let insightTitle: String
-    let value: String
-    let change: String?
-}
-
-// MARK: - Widget Support
-
-extension APIClient {
-    /// Save widget data to shared container for widget to access
-    func saveWidgetData(appName: String, insightTitle: String, value: String, change: String?) {
-        let widgetData = TDWidgetData(
-            appName: appName,
-            insightTitle: insightTitle,
-            value: value,
-            change: change
-        )
-
-        if let encoded = try? JSONEncoder().encode(widgetData) {
-            UserDefaults(suiteName: "group.telemetrydeck.viewer")?.set(encoded, forKey: "widgetData")
-        } else {
-            // Log encoding failure in debug builds
-#if DEBUG
-            print("Failed to encode widget data")
-#endif
-        }
-    }
-
-    /// Fetch insight data and update widget
-    func updateWidgetData(for app: TDApp, insight: TDInsight) async {
-        // In a real implementation, you would fetch the actual insight data
-        // For now, we'll use placeholder values
-        let value = generateMockValue(for: insight)
-        let change = generateMockChange()
-
-        saveWidgetData(
-            appName: app.name,
-            insightTitle: insight.title,
-            value: value,
-            change: change
-        )
-
-        // Reload all widget timelines
-#if canImport(WidgetKit)
-        WidgetKit.WidgetCenter.shared.reloadAllTimelines()
-#endif
-    }
-
-    private func generateMockValue(for insight: TDInsight) -> String {
-        // Generate mock values based on display mode
-        switch insight.displayMode {
-        case "number":
-            return "\(Int.random(in: 100...9999))"
-        case "barChart", "lineChart":
-            let value = Double.random(in: 100...10000)
-            if value > 1000 {
-                return String(format: "%.1fK", value / 1000)
-            }
-            return "\(Int(value))"
-        default:
-            return "\(Int.random(in: 100...9999))"
-        }
-    }
-
-    private func generateMockChange() -> String? {
-        let change = Int.random(in: -20...30)
-        if change == 0 { return nil }
-        return change > 0 ? "+\(change)%" : "\(change)%"
-    }
-}
+///// Data structure for sharing widget information between app and widget
+//struct TDWidgetData: Codable {
+//    let appName: String
+//    let insightTitle: String
+//    let value: String
+//    let change: String?
+//}
+//
+//// MARK: - Widget Support
+//
+//extension APIClient {
+//    /// Save widget data to shared container for widget to access
+//    func saveWidgetData(appName: String, insightTitle: String, value: String, change: String?) {
+//        let widgetData = TDWidgetData(
+//            appName: appName,
+//            insightTitle: insightTitle,
+//            value: value,
+//            change: change
+//        )
+//
+//        if let encoded = try? JSONEncoder().encode(widgetData) {
+//            UserDefaults(suiteName: "group.telemetrydeck.viewer")?.set(encoded, forKey: "widgetData")
+//        } else {
+//            // Log encoding failure in debug builds
+//#if DEBUG
+//            print("Failed to encode widget data")
+//#endif
+//        }
+//    }
+//
+//    /// Fetch insight data and update widget
+//    func updateWidgetData(for app: TDApp, insight: TDInsight) async {
+//        // In a real implementation, you would fetch the actual insight data
+//        // For now, we'll use placeholder values
+//        let value = generateMockValue(for: insight)
+//        let change = generateMockChange()
+//
+//        saveWidgetData(
+//            appName: app.name,
+//            insightTitle: insight.title,
+//            value: value,
+//            change: change
+//        )
+//
+//        // Reload all widget timelines
+//#if canImport(WidgetKit)
+//        WidgetKit.WidgetCenter.shared.reloadAllTimelines()
+//#endif
+//    }
+//
+//    private func generateMockValue(for insight: TDInsight) -> String {
+//        // Generate mock values based on display mode
+//        switch insight.displayMode {
+//        case "number":
+//            return "\(Int.random(in: 100...9999))"
+//        case "barChart", "lineChart":
+//            let value = Double.random(in: 100...10000)
+//            if value > 1000 {
+//                return String(format: "%.1fK", value / 1000)
+//            }
+//            return "\(Int(value))"
+//        default:
+//            return "\(Int.random(in: 100...9999))"
+//        }
+//    }
+//
+//    private func generateMockChange() -> String? {
+//        let change = Int.random(in: -20...30)
+//        if change == 0 { return nil }
+//        return change > 0 ? "+\(change)%" : "\(change)%"
+//    }
+//}
 
 // MARK: - Errors
 
@@ -680,32 +732,33 @@ extension APIClient {
             namespace: "nl.wesleydegroot.test"
         )
 
-        client.insights = [
-            TDInsight(
-                id: "preview-insight-1",
-                title: "Active Users",
-                description: "Daily active users",
-                displayMode: "number"
-            ),
-            TDInsight(
-                id: "preview-insight-2",
-                title: "User Growth",
-                description: "User growth over time",
-                displayMode: "lineChart"
-            ),
-            TDInsight(
-                id: "preview-insight-3",
-                title: "Platform Distribution",
-                description: "Users by platform",
-                displayMode: "pieChart"
-            ),
-            TDInsight(
-                id: "preview-insight-4",
-                title: "Revenue Trend",
-                description: "Monthly revenue",
-                displayMode: "barChart"
-            )
-        ]
+        client.insights = nil
+//        client.insights = [
+//            TDInsight(
+//                id: "preview-insight-1",
+//                title: "Active Users",
+//                description: "Daily active users",
+//                displayMode: "number"
+//            ),
+//            TDInsight(
+//                id: "preview-insight-2",
+//                title: "User Growth",
+//                description: "User growth over time",
+//                displayMode: "lineChart"
+//            ),
+//            TDInsight(
+//                id: "preview-insight-3",
+//                title: "Platform Distribution",
+//                description: "Users by platform",
+//                displayMode: "pieChart"
+//            ),
+//            TDInsight(
+//                id: "preview-insight-4",
+//                title: "Revenue Trend",
+//                description: "Monthly revenue",
+//                displayMode: "barChart"
+//            )
+//        ]
         return client
     }
 }
