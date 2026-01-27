@@ -1,6 +1,6 @@
 ////
 ////  TelemetryDeckWidget.swift
-////  TelemetrydeckViewer
+////  Telemetrydeck Stats
 ////
 ////  Widget Extension for displaying app statistics
 ////

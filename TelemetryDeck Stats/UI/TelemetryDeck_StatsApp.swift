@@ -1,8 +1,8 @@
 //
 //  TelemetryDeck_StatsApp.swift
-//  TelemetryDeck Stats
+//  Telemetrydeck Stats
 //
-//  Created by Wesley de Groot on 25/01/2026.
+//  Created by Wesley de Groot
 //
 
 import SwiftUI
@@ -14,7 +14,23 @@ struct TelemetryDeck_StatsApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
-                .environmentObject(apiClient)
+                // support preview mode, it does not last after restart of the app.
+                .environmentObject(apiClient.isPreview ? APIClient.preview : apiClient)
+                // print automatic login (if possible)
+                .task(autoLogin)
+        }
+    }
+
+    func autoLogin() {
+        guard let token = UserDefaults.standard.string(forKey: "token") else {
+            return
+        }
+
+        Task {
+            do {
+                try? await apiClient.login(bearerToken: token)
+                try? await apiClient.fetchOrganizations()
+            }
         }
     }
 }

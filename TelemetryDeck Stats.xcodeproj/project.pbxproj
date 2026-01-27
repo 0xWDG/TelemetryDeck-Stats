@@ -6,6 +6,10 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		2B3F854B2F294FFE00D5DBBC /* SwiftExtras in Frameworks */ = {isa = PBXBuildFile; productRef = 2B3F854A2F294FFE00D5DBBC /* SwiftExtras */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		2B5619552F26AC1E008E5A67 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -52,6 +56,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2B3F854B2F294FFE00D5DBBC /* SwiftExtras in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -112,6 +117,7 @@
 			);
 			name = "TelemetryDeck Stats";
 			packageProductDependencies = (
+				2B3F854A2F294FFE00D5DBBC /* SwiftExtras */,
 			);
 			productName = "TelemetryDeck Stats";
 			productReference = 2B5619472F26AC1C008E5A67 /* TelemetryDeck Stats.app */;
@@ -195,6 +201,9 @@
 			);
 			mainGroup = 2B56193E2F26AC1C008E5A67;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				2B3F85492F294FFE00D5DBBC /* XCRemoteSwiftPackageReference "SwiftExtras" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 2B5619482F26AC1C008E5A67 /* Products */;
 			projectDirPath = "";
@@ -578,6 +587,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		2B3F85492F294FFE00D5DBBC /* XCRemoteSwiftPackageReference "SwiftExtras" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/0xWDG/SwiftExtras";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		2B3F854A2F294FFE00D5DBBC /* SwiftExtras */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2B3F85492F294FFE00D5DBBC /* XCRemoteSwiftPackageReference "SwiftExtras" */;
+			productName = SwiftExtras;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 2B56193F2F26AC1C008E5A67 /* Project object */;
 }

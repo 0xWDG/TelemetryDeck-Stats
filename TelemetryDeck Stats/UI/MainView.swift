@@ -1,11 +1,12 @@
 //
 //  MainView.swift
-//  TelemetrydeckViewer
+//  Telemetrydeck Stats
 //
-//  Created by Telemetrydeck Viewer
+//  Created by Wesley de Groot
 //
 
 import SwiftUI
+import SwiftExtras
 
 struct MainView: View {
     @EnvironmentObject var apiClient: APIClient
@@ -17,11 +18,6 @@ struct MainView: View {
                 // User Section
                 Section("Account") {
                     if let user = apiClient.currentUser {
-                        HStack {
-                            Image(systemName: "person.circle.fill")
-                                .font(.title2)
-                                .foregroundColor(.blue)
-
                             VStack(alignment: .leading) {
                                 Text(user.displayName)
                                     .font(.headline)
@@ -45,7 +41,6 @@ struct MainView: View {
                                         .foregroundStyle(.secondary)
                                 }
                             }
-                        }
                         .padding(.vertical, 4)
                     } else {
                         ProgressView()
@@ -64,7 +59,7 @@ struct MainView: View {
 
                 // Organizations Section
                 ForEach(apiClient.organizations) { organization in
-                    Section(header: Text(organization.name)) {
+                    Section {
                         if let apps = apiClient.apps?.apps,
                            apiClient.selectedOrganization?.id == organization.id {
                             if apps.isEmpty {
@@ -92,6 +87,16 @@ struct MainView: View {
                             ProgressView()
                                 .controlSize(.extraLarge)
                         }
+                    } header: {
+                        HStack {
+                            Text(organization.name)
+                            Spacer()
+                            Text(organization.roleOrganizationPermissions)
+                                .font(.callout)
+                                .padding(2)
+                                .background { Color.gray.opacity(0.2) }
+                                .foregroundStyle(Color.primary)
+                        }
                     }
                 }
                 Section(footer: Text("TelemetryDeck Stats by Wesley de Groot.")) {
@@ -100,33 +105,47 @@ struct MainView: View {
             }
             .navigationTitle("TelemetryDeck Stats")
             .navigationBarTitleDisplayMode(.inline)
-        }
-        .task {
-            // Load organizations on appear
-            if apiClient.organizations.isEmpty {
-                do {
-                    try await apiClient.fetchOrganizations()
-                } catch {
-                    // Log error - in production, use proper logging system
-#if DEBUG
-                    print("Error fetching organizations: \(error)")
-#endif
+            .toolbar {
+                NavigationLink {
+                    SESettingsView(_changeLog: [], _acknowledgements: [])
+                } label: {
+                    Image(systemName: "info.circle")
                 }
             }
+        }
+        .refreshable {
+            await fetchData()
+        }
+        .task {
+            await fetchData()
+        }
+    }
 
-            // fetchApps
+    private func fetchData() async {
+        // Load organizations on appear
+        if apiClient.organizations.isEmpty {
             do {
-                if let organizationID = apiClient.selectedOrganization?.id {
-                    try await apiClient.fetchApps(organizationID: organizationID)
-                }
-
-                // try await apiClient.runQuery(query: "")
+                try await apiClient.fetchOrganizations()
             } catch {
                 // Log error - in production, use proper logging system
 #if DEBUG
-                print("Error fetching runQuery: \(error)")
+                print("Error fetching organizations: \(error)")
 #endif
             }
+        }
+
+        // fetchApps
+        do {
+            if let organizationID = apiClient.selectedOrganization?.id {
+                try await apiClient.fetchApps(organizationID: organizationID)
+            }
+
+            // try await apiClient.runQuery(query: "")
+        } catch {
+            // Log error - in production, use proper logging system
+#if DEBUG
+            print("Error fetching runQuery: \(error)")
+#endif
         }
     }
 }

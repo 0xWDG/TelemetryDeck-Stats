@@ -1,11 +1,12 @@
 //
 //  LoginView.swift
-//  TelemetrydeckViewer
+//  Telemetrydeck Stats
 //
-//  Created by Telemetrydeck Viewer
+//  Created by Wesley de Groot
 //
 
 import SwiftUI
+import SwiftExtras
 
 struct LoginView: View {
     @EnvironmentObject var apiClient: APIClient
@@ -19,10 +20,11 @@ struct LoginView: View {
         VStack(spacing: 20) {
             // Header
             VStack(spacing: 8) {
-                Image(systemName: "chart.bar.fill")
-                    .font(.system(size: 60))
-                    .foregroundColor(.blue)
-                
+                AppInfo
+                    .appIcon
+                    .cornerRadius(24)
+                    .frame(size: 124)
+
                 Text("TelemetryDeck Viewer")
                     .font(.largeTitle)
                     .fontWeight(.bold)
@@ -66,7 +68,7 @@ struct LoginView: View {
                 }
                 .frame(maxWidth: .infinity)
                 .padding()
-                .background(canLogin ? Color.blue : Color.gray)
+                .background(canLogin ? Color.accentColor : Color.gray)
                 .foregroundColor(.white)
                 .cornerRadius(10)
                 .disabled(!canLogin || isLoading)
@@ -78,46 +80,41 @@ struct LoginView: View {
                 Text("Don't have an account?")
                     .font(.footnote)
                     .foregroundColor(.secondary)
-                
-                Link("Sign up at TelemetryDeck.com", destination: URL(string: "https://telemetrydeck.com")!)
-                    .font(.footnote)
-                
-                Link("API Documentation", destination: URL(string: "https://telemetrydeck.com/docs/api/")!)
-                    .font(.footnote)
+
+                    Link("Sign up on TelemetryDeck.com", destination: URL(string: "https://dashboard.telemetrydeck.com/register")!)
+
+                    Button("Sign in with demo account") {
+                        apiClient.isPreview = true
+                    }
+
             }
+            .font(.footnote)
             .padding(.top, 20)
-            
+
             Spacer()
+
+            Text("""
+TelemetryDeck Viewer is not affiliated with [TelemetryDeck GmbH](https://telemetrydeck.com/).
+TelemetryDeck Viewer is built by [Wesley de Groot](https://wesleydegroot.nl).
+""")
+            .font(.footnote)
         }
-        .frame(maxWidth: 600)
         .padding()
-        .task(autoLogin)
+        .background {
+            LinearGradient(
+                gradient: Gradient(colors: [
+                    Color.systemBackground,
+                    Color.accentColor.opacity(0.5)
+                ]),
+                startPoint: .top,
+                endPoint: .bottom
+            )
+            .ignoresSafeArea()
+        }
     }
     
     private var canLogin: Bool {
         !email.isEmpty && !password.isEmpty
-    }
-
-    private func autoLogin() {
-        guard let token = UserDefaults.standard.string(forKey: "token") else {
-            return
-        }
-
-        isLoading = true
-        showError = false
-
-        Task {
-            do {
-                try await apiClient.login(bearerToken: token)
-                try await apiClient.fetchOrganizations()
-            } catch {
-                await MainActor.run {
-                    errorMessage = error.localizedDescription
-                    showError = true
-                    isLoading = false
-                }
-            }
-        }
     }
 
     private func login() {

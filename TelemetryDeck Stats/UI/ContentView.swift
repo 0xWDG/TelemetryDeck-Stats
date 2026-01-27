@@ -1,12 +1,11 @@
 //
 //  ContentView.swift
-//  TelemetrydeckViewer
+//  Telemetrydeck Stats
 //
-//  Created by Telemetrydeck Viewer
+//  Created by Wesley de Groot
 //
 
 import SwiftUI
-
 struct ContentView: View {
     @EnvironmentObject var apiClient: APIClient
     

@@ -1,8 +1,8 @@
 //
 //  InsightsView.swift
-//  TelemetrydeckViewer
+//  Telemetrydeck Stats
 //
-//  Created by Telemetrydeck Viewer
+//  Created by Wesley de Groot
 //
 
 import SwiftUI
@@ -66,8 +66,42 @@ struct InsightsView: View {
                     }
                 }
             }
+
+            if !data.isEmpty {
+                Section("Statistics") {
+                    LabeledContent(
+                        "Total Users in period",
+                        value: data.reduce(0) { $0 + $1.users },
+                        format: .number
+                    )
+                    LabeledContent(
+                        "Average Users per day",
+                        value: Double(data.reduce(0) { $0 + $1.users }) / Double(data.count),
+                        format: .number.precision(.fractionLength(0))
+                    )
+                    // Most active day
+                    if let mostActiveDay = data.max(by: { $0.users < $1.users }) {
+                        LabeledContent(
+                            "Most active day",
+                            value: "\(formatter.string(from: mostActiveDay.day)) (\(mostActiveDay.users) users)"
+                        )
+                    }
+                }
+            }
         }
         .navigationTitle(app.name)
+        .toolbar {
+            ToolbarItem(placement: .principal) {
+                Text("\(Image(systemName: app.settings.displayMode == "app" ? "apps.iphone": "globe")) \(app.name)")
+            }
+        }
+        .refreshable {
+            do {
+                try await apiClient.fetchInsights(appID: app.id)
+            } catch {
+                print("Error", error)
+            }
+        }
         .task {
             do {
                 try await apiClient.fetchInsights(appID: app.id)
