@@ -8,6 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		2B3F854B2F294FFE00D5DBBC /* SwiftExtras in Frameworks */ = {isa = PBXBuildFile; productRef = 2B3F854A2F294FFE00D5DBBC /* SwiftExtras */; };
+		2BB2D5CD2F2E4F8D003535B3 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2BB2D5CC2F2E4F8D003535B3 /* WidgetKit.framework */; };
+		2BB2D5CF2F2E4F8D003535B3 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2BB2D5CE2F2E4F8D003535B3 /* SwiftUI.framework */; };
+		2BD80A2C2F2E55DE00B2B1ED /* SwiftExtras in Frameworks */ = {isa = PBXBuildFile; productRef = 2BD80A2B2F2E55DE00B2B1ED /* SwiftExtras */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -31,11 +34,41 @@
 		2B5619472F26AC1C008E5A67 /* TelemetryDeck Stats.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "TelemetryDeck Stats.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2B5619542F26AC1E008E5A67 /* TelemetryDeck StatsTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "TelemetryDeck StatsTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2B56195E2F26AC1E008E5A67 /* TelemetryDeck StatsUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "TelemetryDeck StatsUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		2BB2D5CA2F2E4F8D003535B3 /* TelemetryWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = TelemetryWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		2BB2D5CC2F2E4F8D003535B3 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
+		2BB2D5CE2F2E4F8D003535B3 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
+		2BD80A902F2E613100B2B1ED /* TelemetryWidgetExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = TelemetryWidgetExtension.entitlements; sourceTree = "<group>"; };
 /* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		2BB2D5DB2F2E4F8E003535B3 /* Exceptions for "TelemetryWidget" folder in "TelemetryWidgetExtension" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 2BB2D5C92F2E4F8D003535B3 /* TelemetryWidgetExtension */;
+		};
+		2BD80A242F2E54F100B2B1ED /* Exceptions for "TelemetryDeck Stats" folder in "TelemetryWidgetExtension" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Models/APIClient.swift,
+				Models/APIPreview.swift,
+				Models/TDApps.swift,
+				Models/TDInsights.swift,
+				Models/TDLogin.swift,
+				Models/TDOrganization.swift,
+				Models/TDUser.swift,
+			);
+			target = 2BB2D5C92F2E4F8D003535B3 /* TelemetryWidgetExtension */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		2B5619492F26AC1C008E5A67 /* TelemetryDeck Stats */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				2BD80A242F2E54F100B2B1ED /* Exceptions for "TelemetryDeck Stats" folder in "TelemetryWidgetExtension" target */,
+			);
 			path = "TelemetryDeck Stats";
 			sourceTree = "<group>";
 		};
@@ -47,6 +80,14 @@
 		2B5619612F26AC1E008E5A67 /* TelemetryDeck StatsUITests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = "TelemetryDeck StatsUITests";
+			sourceTree = "<group>";
+		};
+		2BB2D5D02F2E4F8D003535B3 /* TelemetryWidget */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				2BB2D5DB2F2E4F8E003535B3 /* Exceptions for "TelemetryWidget" folder in "TelemetryWidgetExtension" target */,
+			);
+			path = TelemetryWidget;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -74,15 +115,28 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		2BB2D5C72F2E4F8D003535B3 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2BB2D5CF2F2E4F8D003535B3 /* SwiftUI.framework in Frameworks */,
+				2BD80A2C2F2E55DE00B2B1ED /* SwiftExtras in Frameworks */,
+				2BB2D5CD2F2E4F8D003535B3 /* WidgetKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
 		2B56193E2F26AC1C008E5A67 = {
 			isa = PBXGroup;
 			children = (
+				2BD80A902F2E613100B2B1ED /* TelemetryWidgetExtension.entitlements */,
 				2B5619492F26AC1C008E5A67 /* TelemetryDeck Stats */,
 				2B5619572F26AC1E008E5A67 /* TelemetryDeck StatsTests */,
 				2B5619612F26AC1E008E5A67 /* TelemetryDeck StatsUITests */,
+				2BB2D5D02F2E4F8D003535B3 /* TelemetryWidget */,
+				2BB2D5CB2F2E4F8D003535B3 /* Frameworks */,
 				2B5619482F26AC1C008E5A67 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -93,8 +147,18 @@
 				2B5619472F26AC1C008E5A67 /* TelemetryDeck Stats.app */,
 				2B5619542F26AC1E008E5A67 /* TelemetryDeck StatsTests.xctest */,
 				2B56195E2F26AC1E008E5A67 /* TelemetryDeck StatsUITests.xctest */,
+				2BB2D5CA2F2E4F8D003535B3 /* TelemetryWidgetExtension.appex */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		2BB2D5CB2F2E4F8D003535B3 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				2BB2D5CC2F2E4F8D003535B3 /* WidgetKit.framework */,
+				2BB2D5CE2F2E4F8D003535B3 /* SwiftUI.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -169,6 +233,29 @@
 			productReference = 2B56195E2F26AC1E008E5A67 /* TelemetryDeck StatsUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
+		2BB2D5C92F2E4F8D003535B3 /* TelemetryWidgetExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2BB2D5DC2F2E4F8E003535B3 /* Build configuration list for PBXNativeTarget "TelemetryWidgetExtension" */;
+			buildPhases = (
+				2BB2D5C62F2E4F8D003535B3 /* Sources */,
+				2BB2D5C72F2E4F8D003535B3 /* Frameworks */,
+				2BB2D5C82F2E4F8D003535B3 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				2BB2D5D02F2E4F8D003535B3 /* TelemetryWidget */,
+			);
+			name = TelemetryWidgetExtension;
+			packageProductDependencies = (
+				2BD80A2B2F2E55DE00B2B1ED /* SwiftExtras */,
+			);
+			productName = TelemetryWidgetExtension;
+			productReference = 2BB2D5CA2F2E4F8D003535B3 /* TelemetryWidgetExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -189,6 +276,9 @@
 					2B56195D2F26AC1E008E5A67 = {
 						CreatedOnToolsVersion = 26.2;
 						TestTargetID = 2B5619462F26AC1C008E5A67;
+					};
+					2BB2D5C92F2E4F8D003535B3 = {
+						CreatedOnToolsVersion = 26.2;
 					};
 				};
 			};
@@ -212,6 +302,7 @@
 				2B5619462F26AC1C008E5A67 /* TelemetryDeck Stats */,
 				2B5619532F26AC1E008E5A67 /* TelemetryDeck StatsTests */,
 				2B56195D2F26AC1E008E5A67 /* TelemetryDeck StatsUITests */,
+				2BB2D5C92F2E4F8D003535B3 /* TelemetryWidgetExtension */,
 			);
 		};
 /* End PBXProject section */
@@ -238,6 +329,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		2BB2D5C82F2E4F8D003535B3 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -256,6 +354,13 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		2B56195A2F26AC1E008E5A67 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2BB2D5C62F2E4F8D003535B3 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -404,11 +509,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "TelemetryDeck Stats/TelemetryDeck Stats.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 4V2D72S45C;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -419,7 +526,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "nl.wesleydegroot.TelemetryDeck-Stats";
+				PRODUCT_BUNDLE_IDENTIFIER = nl.wesleydegroot.TelemetryDeckStats;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
@@ -436,11 +543,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "TelemetryDeck Stats/TelemetryDeck Stats.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 4V2D72S45C;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -451,7 +560,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "nl.wesleydegroot.TelemetryDeck-Stats";
+				PRODUCT_BUNDLE_IDENTIFIER = nl.wesleydegroot.TelemetryDeckStats;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
@@ -473,7 +582,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 26.2;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "nl.wesleydegroot.TelemetryDeck-StatsTests";
+				PRODUCT_BUNDLE_IDENTIFIER = nl.wesleydegroot.TelemetryDeckStatsTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = NO;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
@@ -495,7 +604,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 26.2;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "nl.wesleydegroot.TelemetryDeck-StatsTests";
+				PRODUCT_BUNDLE_IDENTIFIER = nl.wesleydegroot.TelemetryDeckStatsTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = NO;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
@@ -515,7 +624,7 @@
 				DEVELOPMENT_TEAM = 4V2D72S45C;
 				GENERATE_INFOPLIST_FILE = YES;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "nl.wesleydegroot.TelemetryDeck-StatsUITests";
+				PRODUCT_BUNDLE_IDENTIFIER = nl.wesleydegroot.TelemetryDeckStatsUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = NO;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
@@ -535,7 +644,7 @@
 				DEVELOPMENT_TEAM = 4V2D72S45C;
 				GENERATE_INFOPLIST_FILE = YES;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "nl.wesleydegroot.TelemetryDeck-StatsUITests";
+				PRODUCT_BUNDLE_IDENTIFIER = nl.wesleydegroot.TelemetryDeckStatsUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = NO;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
@@ -544,6 +653,68 @@
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_TARGET_NAME = "TelemetryDeck Stats";
+			};
+			name = Release;
+		};
+		2BB2D5DD2F2E4F8E003535B3 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_ENTITLEMENTS = TelemetryWidgetExtension.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 4V2D72S45C;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = TelemetryWidget/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = TelemetryWidget;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = nl.wesleydegroot.TelemetryDeckStats.Widget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		2BB2D5DE2F2E4F8E003535B3 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_ENTITLEMENTS = TelemetryWidgetExtension.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 4V2D72S45C;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = TelemetryWidget/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = TelemetryWidget;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = nl.wesleydegroot.TelemetryDeckStats.Widget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
 		};
@@ -586,6 +757,15 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
+		2BB2D5DC2F2E4F8E003535B3 /* Build configuration list for PBXNativeTarget "TelemetryWidgetExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2BB2D5DD2F2E4F8E003535B3 /* Debug */,
+				2BB2D5DE2F2E4F8E003535B3 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
@@ -601,6 +781,11 @@
 
 /* Begin XCSwiftPackageProductDependency section */
 		2B3F854A2F294FFE00D5DBBC /* SwiftExtras */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2B3F85492F294FFE00D5DBBC /* XCRemoteSwiftPackageReference "SwiftExtras" */;
+			productName = SwiftExtras;
+		};
+		2BD80A2B2F2E55DE00B2B1ED /* SwiftExtras */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 2B3F85492F294FFE00D5DBBC /* XCRemoteSwiftPackageReference "SwiftExtras" */;
 			productName = SwiftExtras;

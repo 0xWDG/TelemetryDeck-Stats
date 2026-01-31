@@ -20,6 +20,7 @@ struct InsightsView: View {
     let app: TDApp
     @State private var isLoading = false
     @State private var errorMessage: String?
+    @State private var selection: String = "Visitors"
 
     var data: [ChartData] {
         (apiClient.insights?.result.rows.map {
@@ -38,14 +39,14 @@ struct InsightsView: View {
             Chart {
                 ForEach(data, id: \.day) {
                     BarMark(
-                        x: .value("Date", $0.day),
+                        x: .value("Date", $0.day, unit: .day),
                         y: .value("Users", $0.users)
                     )
                 }
             }
             .padding()
             .overlay {
-                if data.isEmpty {
+                if data.isEmpty || apiClient.isLoading {
                     VStack {
                         ProgressView()
                             .controlSize(.large)
@@ -90,10 +91,20 @@ struct InsightsView: View {
             }
         }
         .navigationTitle(app.name)
+        .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .principal) {
                 Text("\(Image(systemName: app.settings.displayMode == "app" ? "apps.iphone": "globe")) \(app.name)")
             }
+        }
+        .safeAreaInset(edge: .top) {
+            Picker("Select app", selection: $selection) {
+                Text("Visitors").tag("Visitors")
+                Text("Countries").tag("Countries")
+            }
+            .pickerStyle(.segmented)
+            .padding(.horizontal)
+            .disabled(data.isEmpty || apiClient.isLoading)
         }
         .refreshable {
             do {
@@ -102,29 +113,12 @@ struct InsightsView: View {
                 print("Error", error)
             }
         }
-        .task {
-            do {
-                try await apiClient.fetchInsights(appID: app.id)
-            } catch {
-                print("Error", error)
-            }
-        }
-    }
-
-    private func loadInsights() {
-        isLoading = true
-        errorMessage = nil
-
-        Task {
-            do {
-                try await apiClient.fetchInsights(appID: app.id)
-                await MainActor.run {
-                    isLoading = false
-                }
-            } catch {
-                await MainActor.run {
-                    isLoading = false
-                    errorMessage = error.localizedDescription
+        .onAppear {
+            Task {
+                do {
+                    try await apiClient.fetchInsights(appID: app.id)
+                } catch {
+                    print("Error", error)
                 }
             }
         }

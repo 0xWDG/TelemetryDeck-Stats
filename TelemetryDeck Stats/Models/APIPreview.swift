@@ -42,7 +42,7 @@ extension APIClient {
                     id: "preview-app-2",
                     name: "Web App",
                     organizationID: "preview-org-1",
-                    settings: .init(displayMode: "app"),
+                    settings: .init(displayMode: "website"),
                     insightGroups: []
                 )
             ],

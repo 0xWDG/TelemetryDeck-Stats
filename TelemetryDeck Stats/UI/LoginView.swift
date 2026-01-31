@@ -15,6 +15,8 @@ struct LoginView: View {
     @State private var isLoading = false
     @State private var showError = false
     @State private var errorMessage = ""
+    @FocusState private var focusedField: Field?
+    private enum Field: Hashable { case email, password }
     
     var body: some View {
         VStack(spacing: 20) {
@@ -38,40 +40,78 @@ struct LoginView: View {
             
             // Login Form
             VStack(spacing: 16) {
-                TextField("Email", text: $email)
-                    .textFieldStyle(.roundedBorder)
-                    .textContentType(.emailAddress)
-                    .autocapitalization(.none)
-                    .keyboardType(.emailAddress)
-                    .disabled(isLoading)
-                
-                SecureField("Password", text: $password)
-                    .textFieldStyle(.roundedBorder)
-                    .textContentType(.password)
-                    .disabled(isLoading)
-                
-                if showError {
-                    Text(errorMessage)
-                        .font(.caption)
-                        .foregroundColor(.red)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                }
-                
-                Button(action: login) {
-                    if isLoading {
-                        ProgressView()
-                            .progressViewStyle(CircularProgressViewStyle())
-                    } else {
-                        Text("Login")
-                            .fontWeight(.semibold)
+                VStack(spacing: 18) {
+                    // Email field with icon
+                    HStack(spacing: 12) {
+                        Image(systemName: "envelope.fill")
+                            .foregroundStyle(.secondary)
+                        TextField("Email", text: $email)
+                            .textContentType(.emailAddress)
+                            .keyboardType(.emailAddress)
+                            .textInputAutocapitalization(.never)
+                            .disabled(isLoading)
+                            .submitLabel(.next)
+                            .focused($focusedField, equals: .email)
+                            .onSubmit {
+                                focusedField = .password
+                            }
                     }
+                    .padding(.horizontal, 14)
+                    .padding(.vertical, 12)
+                    .background(.regularMaterial)
+                    .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+
+                    // Password field with icon
+                    HStack(spacing: 12) {
+                        Image(systemName: "lock.fill")
+                            .foregroundStyle(.secondary)
+                        SecureField("Password", text: $password)
+                            .textContentType(.password)
+                            .disabled(isLoading)
+                            .submitLabel(.go)
+                            .focused($focusedField, equals: .password)
+                            .onSubmit {
+                                login()
+                            }
+                    }
+                    .padding(.horizontal, 14)
+                    .padding(.vertical, 12)
+                    .background(.regularMaterial)
+                    .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+
+                    if showError {
+                        Text(errorMessage)
+                            .font(.footnote)
+                            .foregroundStyle(.red)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .transition(.opacity.combined(with: .move(edge: .top)))
+                    }
+
+                    Button(action: login) {
+                        HStack(spacing: 8) {
+                            if isLoading {
+                                ProgressView()
+                                    .progressViewStyle(.circular)
+                            } else {
+                                Image(systemName: "arrow.right.circle.fill")
+                            }
+                            Text(isLoading ? "Signing in…" : "Sign In")
+                                .fontWeight(.semibold)
+                        }
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 8)
+                        .contentShape(Rectangle())
+                    }
+                    .buttonStyle(.borderedProminent)
+                    .tint(canLogin ? .accentColor : .gray)
+                    .disabled(!canLogin)
                 }
-                .frame(maxWidth: .infinity)
-                .padding()
-                .background(canLogin ? Color.accentColor : Color.gray)
-                .foregroundColor(.white)
-                .cornerRadius(10)
-                .disabled(!canLogin || isLoading)
+                .padding(20)
+                .background(
+                    RoundedRectangle(cornerRadius: 20, style: .continuous)
+                        .fill(.ultraThinMaterial)
+                        .shadow(color: .black.opacity(0.08), radius: 20, x: 0, y: 12)
+                )
             }
             .padding(.horizontal, 40)
             
@@ -111,13 +151,18 @@ TelemetryDeck Viewer is built by [Wesley de Groot](https://wesleydegroot.nl).
             )
             .ignoresSafeArea()
         }
+        .onAppear {
+            focusedField = .email
+        }
     }
     
     private var canLogin: Bool {
-        !email.isEmpty && !password.isEmpty
+        !email.isEmpty && !password.isEmpty && !isLoading
     }
 
     private func login() {
+        guard canLogin else { return }
+
         isLoading = true
         showError = false
         
@@ -144,3 +189,4 @@ TelemetryDeck Viewer is built by [Wesley de Groot](https://wesleydegroot.nl).
     LoginView()
         .environmentObject(APIClient())
 }
+
