@@ -119,7 +119,7 @@ struct InsightsView: View {
                 }
                 .pickerStyle(.segmented)
                 .disabled(data.isEmpty || apiClient.isLoading)
-                .onChange(of: timePeriod) { oldValue, newValue in
+                .onChange(of: timePeriod) { _, newValue in
                     Task {
                         do {
                             try await apiClient.fetchInsights(appID: app.id, offset: newValue.offset)
