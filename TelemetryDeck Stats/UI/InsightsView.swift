@@ -21,6 +21,19 @@ struct InsightsView: View {
     @State private var isLoading = false
     @State private var errorMessage: String?
     @State private var selection: String = "Visitors"
+    @State private var timePeriod: TimePeriodOption = .last30Days
+    
+    enum TimePeriodOption: String, CaseIterable {
+        case today = "Today"
+        case last30Days = "Last 30 Days"
+        
+        var offset: Int {
+            switch self {
+            case .today: return 1
+            case .last30Days: return 30
+            }
+        }
+    }
 
     var data: [ChartData] {
         (apiClient.insights?.result.rows.map {
@@ -98,17 +111,38 @@ struct InsightsView: View {
             }
         }
         .safeAreaInset(edge: .top) {
-            Picker("Select app", selection: $selection) {
-                Text("Visitors").tag("Visitors")
-                Text("Countries").tag("Countries")
+            VStack(spacing: 8) {
+                Picker("Time Period", selection: $timePeriod) {
+                    ForEach(TimePeriodOption.allCases, id: \.self) { period in
+                        Text(period.rawValue).tag(period)
+                    }
+                }
+                .pickerStyle(.segmented)
+                .disabled(data.isEmpty || apiClient.isLoading)
+                .onChange(of: timePeriod) { oldValue, newValue in
+                    Task {
+                        do {
+                            try await apiClient.fetchInsights(appID: app.id, offset: newValue.offset)
+                            await apiClient.updateWidgetDataForApp(appID: app.id, offset: newValue.offset)
+                        } catch {
+                            print("Error", error)
+                        }
+                    }
+                }
+                
+                Picker("Select view", selection: $selection) {
+                    Text("Visitors").tag("Visitors")
+                    Text("Countries").tag("Countries")
+                }
+                .pickerStyle(.segmented)
+                .disabled(data.isEmpty || apiClient.isLoading)
             }
-            .pickerStyle(.segmented)
             .padding(.horizontal)
-            .disabled(data.isEmpty || apiClient.isLoading)
         }
         .refreshable {
             do {
-                try await apiClient.fetchInsights(appID: app.id)
+                try await apiClient.fetchInsights(appID: app.id, offset: timePeriod.offset)
+                await apiClient.updateWidgetDataForApp(appID: app.id, offset: timePeriod.offset)
             } catch {
                 print("Error", error)
             }
@@ -116,7 +150,8 @@ struct InsightsView: View {
         .onAppear {
             Task {
                 do {
-                    try await apiClient.fetchInsights(appID: app.id)
+                    try await apiClient.fetchInsights(appID: app.id, offset: timePeriod.offset)
+                    await apiClient.updateWidgetDataForApp(appID: app.id, offset: timePeriod.offset)
                 } catch {
                     print("Error", error)
                 }

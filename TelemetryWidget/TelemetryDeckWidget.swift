@@ -8,6 +8,48 @@
 import SwiftUI
 import WidgetKit
 import SwiftExtras
+import AppIntents
+
+// MARK: - Widget Configuration
+
+enum TimePeriod: String, Codable, AppEnum {
+    case today = "Today"
+    case last30Days = "Last 30 Days"
+    
+    static var typeDisplayRepresentation: TypeDisplayRepresentation = "Time Period"
+    static var caseDisplayRepresentations: [TimePeriod: DisplayRepresentation] = [
+        .today: "Today",
+        .last30Days: "Last 30 Days"
+    ]
+    
+    var offset: Int {
+        switch self {
+        case .today: return 1
+        case .last30Days: return 30
+        }
+    }
+}
+
+struct WidgetConfiguration: Codable {
+    var timePeriod: TimePeriod
+    var hiddenAppIDs: [String]
+    
+    init(timePeriod: TimePeriod = .last30Days, hiddenAppIDs: [String] = []) {
+        self.timePeriod = timePeriod
+        self.hiddenAppIDs = hiddenAppIDs
+    }
+}
+
+struct ConfigurationIntent: WidgetConfigurationIntent {
+    static var title: LocalizedStringResource = "Widget Configuration"
+    static var description = IntentDescription("Configure your TelemetryDeck widget")
+    
+    @Parameter(title: "Time Period", default: .last30Days)
+    var timePeriod: TimePeriod
+    
+    @Parameter(title: "Hidden Apps", default: [])
+    var hiddenAppIDs: [String]
+}
 
 // MARK: - Widget Entry
 
@@ -15,21 +57,25 @@ struct StatisticsEntry: TimelineEntry, Codable {
     let date: Date
     let stats: [Statistics]
     let error: String?
+    let configuration: WidgetConfiguration
 
-    struct Statistics: Codable {
+    struct Statistics: Codable, Identifiable {
+        let id: String
         let name: String
         let value: Int
+        let displayMode: String
     }
 }
 
 // MARK: - Timeline Provider
 
-struct StatisticsProvider: TimelineProvider {
-    func errorview(in context: Context, error: Error) -> StatisticsEntry {
+struct StatisticsProvider: AppIntentTimelineProvider {
+    func errorview(in context: Context, error: Error, configuration: WidgetConfiguration) -> StatisticsEntry {
         StatisticsEntry(
             date: Date(),
             stats: [],
-            error: error.localizedDescription
+            error: error.localizedDescription,
+            configuration: configuration
         )
     }
 
@@ -37,66 +83,69 @@ struct StatisticsProvider: TimelineProvider {
         StatisticsEntry(
             date: Date(),
             stats: [],
-            error: nil
+            error: nil,
+            configuration: WidgetConfiguration()
         )
     }
 
-    func getSnapshot(
-        in context: Context,
-        completion: @escaping (StatisticsEntry) -> Void
-    ) {
-        let entry = StatisticsEntry(
+    func snapshot(for configuration: ConfigurationIntent, in context: Context) async -> StatisticsEntry {
+        if context.isPreview {
+            return StatisticsEntry(
+                date: Date(),
+                stats: [
+                    .init(id: "1", name: "Sample App", value: 1234, displayMode: "app"),
+                    .init(id: "2", name: "Another App", value: 567, displayMode: "globe")
+                ],
+                error: nil,
+                configuration: WidgetConfiguration(
+                    timePeriod: configuration.timePeriod,
+                    hiddenAppIDs: configuration.hiddenAppIDs
+                )
+            )
+        }
+        
+        return loadWidgetData(configuration: configuration)
+    }
+
+    func timeline(for configuration: ConfigurationIntent, in context: Context) async -> Timeline<StatisticsEntry> {
+        let entry = loadWidgetData(configuration: configuration)
+        
+        // Update every 2 hours
+        let nextUpdate = Calendar.current.date(byAdding: .hour, value: 2, to: Date())!
+        return Timeline(entries: [entry], policy: .after(nextUpdate))
+    }
+    
+    private func loadWidgetData(configuration: ConfigurationIntent) -> StatisticsEntry {
+        let widgetConfig = WidgetConfiguration(
+            timePeriod: configuration.timePeriod,
+            hiddenAppIDs: configuration.hiddenAppIDs
+        )
+        
+        // Load data from shared UserDefaults
+        if let sharedDefaults = UserDefaults(suiteName: "group.nl.wesleydegroot.TelemetryDeckStats"),
+           let savedData = sharedDefaults.data(forKey: "widgetData"),
+           let widgetData = try? JSONDecoder().decode(StatisticsEntry.self, from: savedData) {
+            
+            // Filter out hidden apps
+            let filteredStats = widgetData.stats.filter { stat in
+                !widgetConfig.hiddenAppIDs.contains(stat.id)
+            }
+            
+            return StatisticsEntry(
+                date: Date(),
+                stats: filteredStats,
+                error: nil,
+                configuration: widgetConfig
+            )
+        }
+        
+        // No data available
+        return StatisticsEntry(
             date: Date(),
             stats: [],
-            error: nil
+            error: nil,
+            configuration: widgetConfig
         )
-        completion(entry)
-    }
-
-    func getTimeline(
-        in context: Context,
-        completion: @escaping (Timeline<StatisticsEntry>
-        ) -> Void) {
-        // In production, fetch real data from UserDefaults or shared container
-        // For now, use mock data
-        let currentDate = Date()
-
-        Task {
-            do {
-                try await APIClient().fetchInsights(offset: 1)
-            } catch {
-                let entry = errorview(in: context, error: error)
-                let timeline = Timeline(entries: [entry], policy: .never)
-                completion(timeline)
-            }
-        }
-
-        // Check for saved widget configuration
-        //        if let savedData = UserDefaults(
-        //            suiteName: "group.telemetrydeck.viewer"
-        //        )?.data(forKey: "widgetData"),
-        //           let widgetData = try? JSONDecoder().decode(StatisticsEntry.self, from: savedData) {
-        //            let entry = StatisticsEntry(
-        //                date: currentDate,
-        //                appName: widgetData.appName,
-        //                insightTitle: widgetData.insightTitle,
-        //                value: widgetData.value,
-        //                change: widgetData.change
-        //            )
-        //
-        //            // Update every 2 hours
-        //            let nextUpdate = Calendar.current.date(byAdding: .hour, value: 2, to: currentDate)!
-        //            let timeline = Timeline(entries: [entry], policy: .after(nextUpdate))
-        //            completion(timeline)
-        //        } else {
-        // No configuration yet, show placeholder
-        let entry = placeholder(in: context)
-        let timeline = Timeline(
-            entries: [entry],
-            policy: .never
-        )
-        completion(timeline)
-        //        }
     }
 }
 
@@ -109,21 +158,67 @@ struct StatisticsWidgetView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             if let error = entry.error {
-                Text(error.localizedDescription)
-            } else {
-                let maxItems = switch family {
-                case .systemLarge: 12
-                default: 5
+                VStack(spacing: 12) {
+                    Image(systemName: "exclamationmark.triangle")
+                        .font(.largeTitle)
+                        .foregroundColor(.orange)
+                    Text(error)
+                        .multilineTextAlignment(.center)
+                        .font(.caption)
                 }
-
-                ForEach(0 ..< maxItems) { _ in
-                    LabeledContent {
-                        Text("Value")
-                    } label: {
-                        HStack {
-                            Image(systemName: "app" == "app" ? "apps.iphone": "globe")
-                            Text("DVG Valley Guide")
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+            } else if entry.stats.isEmpty {
+                VStack(spacing: 12) {
+                    Image(systemName: "chart.bar")
+                        .font(.largeTitle)
+                        .foregroundColor(.secondary)
+                    Text("No Data Available")
+                        .font(.headline)
+                    Text("Open the app to sync your statistics")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                        .multilineTextAlignment(.center)
+                }
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+            } else {
+                VStack(alignment: .leading, spacing: 4) {
+                    HStack {
+                        Text("Statistics")
+                            .font(.headline)
+                            .foregroundColor(.primary)
+                        Spacer()
+                        Text(entry.configuration.timePeriod.rawValue)
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                    }
+                    .padding(.bottom, 4)
+                    
+                    let maxItems = switch family {
+                    case .systemLarge: 12
+                    default: 5
+                    }
+                    
+                    ForEach(entry.stats.prefix(maxItems)) { stat in
+                        LabeledContent {
+                            Text("\(stat.value)")
+                                .font(.system(.body, design: .rounded))
+                                .fontWeight(.semibold)
+                        } label: {
+                            HStack(spacing: 6) {
+                                Image(systemName: stat.displayMode == "app" ? "apps.iphone" : "globe")
+                                    .foregroundColor(.accentColor)
+                                Text(stat.name)
+                                    .lineLimit(1)
+                            }
                         }
+                        .font(.caption)
+                    }
+                    
+                    if entry.stats.count > maxItems {
+                        Text("+ \(entry.stats.count - maxItems) more")
+                            .font(.caption2)
+                            .foregroundColor(.secondary)
+                            .padding(.top, 4)
                     }
                 }
             }
@@ -141,8 +236,9 @@ struct TelemetryDeckWidget: Widget {
     let kind: String = "TelemetryDeckWidget"
 
     var body: some WidgetConfiguration {
-        StaticConfiguration(
+        AppIntentConfiguration(
             kind: kind,
+            intent: ConfigurationIntent.self,
             provider: StatisticsProvider()
         ) { entry in
             StatisticsWidgetView(entry: entry)
@@ -169,41 +265,60 @@ struct TelemetryDeckWidgetBundle: WidgetBundle {
 #if DEBUG
 struct TelemetryDeckWidget_Previews: PreviewProvider {
     static var previews: some View {
-        TelemetryDeckWidgetPreview()
-    }
-}
-
-struct TelemetryDeckWidgetPreview: View {
-    @State var errorMessage: String?
-
-    var body: some View {
         Group {
-            let _ = print("Error?", errorMessage)
+            // With data
             StatisticsWidgetView(entry: StatisticsEntry(
                 date: Date(),
-                stats: [],
-                error: errorMessage
+                stats: [
+                    .init(id: "1", name: "DVG Valley Guide", value: 1234, displayMode: "app"),
+                    .init(id: "2", name: "Website", value: 567, displayMode: "globe"),
+                    .init(id: "3", name: "Mobile App", value: 890, displayMode: "app"),
+                    .init(id: "4", name: "Web Portal", value: 345, displayMode: "globe"),
+                    .init(id: "5", name: "Test App", value: 123, displayMode: "app")
+                ],
+                error: nil,
+                configuration: WidgetConfiguration(timePeriod: .last30Days)
             ))
             .previewContext(WidgetPreviewContext(family: .systemMedium))
+            .previewDisplayName("Medium - With Data")
 
+            // Large widget
+            StatisticsWidgetView(entry: StatisticsEntry(
+                date: Date(),
+                stats: [
+                    .init(id: "1", name: "DVG Valley Guide", value: 1234, displayMode: "app"),
+                    .init(id: "2", name: "Website", value: 567, displayMode: "globe"),
+                    .init(id: "3", name: "Mobile App", value: 890, displayMode: "app"),
+                    .init(id: "4", name: "Web Portal", value: 345, displayMode: "globe"),
+                    .init(id: "5", name: "Test App", value: 123, displayMode: "app"),
+                    .init(id: "6", name: "Another App", value: 678, displayMode: "app")
+                ],
+                error: nil,
+                configuration: WidgetConfiguration(timePeriod: .today)
+            ))
+            .previewContext(WidgetPreviewContext(family: .systemLarge))
+            .previewDisplayName("Large - With Data")
+            
+            // Empty state
             StatisticsWidgetView(entry: StatisticsEntry(
                 date: Date(),
                 stats: [],
-                error: errorMessage
+                error: nil,
+                configuration: WidgetConfiguration()
             ))
-            .previewContext(WidgetPreviewContext(family: .systemLarge))
-        }
-        .id(UUID())
-        .task {
-            do {
-                try await APIClient().fetchInsights(offset: 1)
-            } catch {
-                print("Error", error)
-                errorMessage = error.localizedDescription
-            }
-
+            .previewContext(WidgetPreviewContext(family: .systemMedium))
+            .previewDisplayName("Empty State")
+            
+            // Error state
+            StatisticsWidgetView(entry: StatisticsEntry(
+                date: Date(),
+                stats: [],
+                error: "Failed to load data",
+                configuration: WidgetConfiguration()
+            ))
+            .previewContext(WidgetPreviewContext(family: .systemMedium))
+            .previewDisplayName("Error State")
         }
     }
 }
-// WidgetCenter.shared.reloadAllTimelines()
 #endif
