@@ -16,18 +16,13 @@ extension APIClient {
             throw APIError.notAuthenticated
         }
 
-        isLoading = true
-        defer { isLoading = false }
-        self.insights = nil
+        beginLoading()
+        defer { endLoading() }
 
-        let url = URL(string: "\(baseURL)v3/query/calculate-async/")!
-        var request = URLRequest(url: url)
+        var request = try authenticatedRequest(path: "v3/query/calculate-async/", token: token)
         request.httpMethod = "POST"
-        request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
-        // "dataSource":"nl.wesleydegroot",
-        request.httpBody = """
-         {"aggregations":[{"type":"userCount"}],"filter":{"type":"and","fields":[{"type":"selector","dimension":"appID","value":"\(appID)"},{"type":"selector","dimension":"isTestMode","value":"false"}]},"granularity":"day","queryType":"timeseries","relativeIntervals":[{"beginningDate":{"component":"day","offset":-\(offset),"position":"beginning"},"endDate":{"component":"day","offset":0,"position":"end"}}],"testMode":false}    
-        """.data(using: .utf8)
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.httpBody = try JSONEncoder().encode(TDInsightsQuery(appID: appID, offset: offset))
 
         let (data, response) = try await URLSession.shared.data(for: request)
 #if DEBUG
@@ -43,12 +38,11 @@ extension APIClient {
 
         try? await Task.sleep(for: defaultTimeout)
 
-        let fetchedInsights = try await Task.retrying(timeout: .seconds(1)) {
-            // Fetch data...
-            let url2 = URL(string: "\(self.baseURL)v3/task/\(taskId.queryTaskID)/lastSuccessfulValue/")!
-            var request2 = URLRequest(url: url2)
-            request2.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
-
+        let fetchedInsights: TDInsights = try await retry(timeout: .seconds(1)) {
+            let request2 = try authenticatedRequest(
+                path: "v3/task/\(taskId.queryTaskID)/lastSuccessfulValue/",
+                token: token
+            )
             let (data2, response2) = try await URLSession.shared.data(for: request2)
 #if DEBUG
             print("runQuery", "Request2", request2, "Data", String(data: data2, encoding: .utf8), "HTTPResponse", response2)
@@ -59,19 +53,31 @@ extension APIClient {
                 throw APIError.requestFailed
             }
 
-            let formatter = DateFormatter()
-            formatter.locale = Locale(identifier: "en_US_POSIX")
-            formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
-            let decoder = JSONDecoder()
-            decoder.dateDecodingStrategy = .formatted(formatter)
-
-            return try decoder.decode(TDInsights.self, from: data2)
-        }.value
+            return try TDInsights.decoder.decode(TDInsights.self, from: data2)
+        }
 
         print("fetchedInsights", fetchedInsights)
-        await MainActor.run {
-            self.insights = fetchedInsights
+        insights = fetchedInsights
+        insightsByAppID[appID] = fetchedInsights
+    }
+
+    private func retry<T>(
+        maxRetryCount: Int = 3,
+        timeout: Duration,
+        operation: () async throws -> T
+    ) async throws -> T {
+        for _ in 0 ..< maxRetryCount {
+            try Task<Never, Never>.checkCancellation()
+
+            do {
+                return try await operation()
+            } catch {
+                try await Task<Never, Never>.sleep(for: timeout)
+            }
         }
+
+        try Task<Never, Never>.checkCancellation()
+        return try await operation()
     }
 }
 
@@ -79,52 +85,87 @@ struct TDInsights: Identifiable {
     let result: TDInsightRow
     let calculationFinishedAt: String
 
-    var id: Int { calculationFinishedAt.hashValue }
+    var id: String { calculationFinishedAt }
+
+    static var decoder: JSONDecoder {
+        let formatter = DateFormatter()
+        formatter.locale = Locale(identifier: "en_US_POSIX")
+        formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
+
+        let decoder = JSONDecoder()
+        decoder.dateDecodingStrategy = .formatted(formatter)
+        return decoder
+    }
 }
-nonisolated(unsafe) extension TDInsights: Codable { }
+extension TDInsights: Codable { }
 
 struct TDInsightRow: Identifiable {
     let rows: [TDInsight]
 
     var id: Int { rows.count.hashValue }
 }
-nonisolated(unsafe) extension TDInsightRow: Codable { }
+extension TDInsightRow: Codable { }
 
 struct TDInsight: Identifiable {
-    var id: Int { timestamp.hashValue }
+    var id: Date { timestamp }
 
     let result: TDInsightResult
     let timestamp: Date
 
     struct TDInsightResult: Codable {
-        let Users: Int
-    }
-}
-nonisolated(unsafe) extension TDInsight: Codable { }
+        let users: Int
 
-extension Task where Failure == Error {
-    @discardableResult
-    static func retrying(
-        priority: TaskPriority? = nil,
-        maxRetryCount: Int = 3,
-        timeout: Duration = .seconds(0),
-        operation: @Sendable @escaping () async throws -> Success
-    ) -> Task {
-        Task(priority: priority) {
-            for _ in 0 ..< maxRetryCount {
-                try Task<Never, Never>.checkCancellation()
-
-                do {
-                    return try await operation()
-                } catch {
-                    try? await Task<Never, Never>.sleep(for: timeout)
-                    continue
-                }
-            }
-
-            try Task<Never, Never>.checkCancellation()
-            return try await operation()
+        enum CodingKeys: String, CodingKey {
+            case users = "Users"
         }
     }
 }
+extension TDInsight: Codable { }
 
+private struct TDInsightsQuery: Encodable {
+    let aggregations = [TDAggregation(type: "userCount")]
+    let filter: TDFilter
+    let granularity = "day"
+    let queryType = "timeseries"
+    let relativeIntervals: [TDRelativeInterval]
+    let testMode = false
+
+    init(appID: String, offset: Int) {
+        filter = TDFilter(fields: [
+            TDSelectorFilter(dimension: "appID", value: appID),
+            TDSelectorFilter(dimension: "isTestMode", value: "false")
+        ])
+        relativeIntervals = [
+            TDRelativeInterval(
+                beginningDate: TDRelativeDate(component: "day", offset: -offset, position: "beginning"),
+                endDate: TDRelativeDate(component: "day", offset: 0, position: "end")
+            )
+        ]
+    }
+}
+
+private struct TDAggregation: Encodable {
+    let type: String
+}
+
+private struct TDFilter: Encodable {
+    let type = "and"
+    let fields: [TDSelectorFilter]
+}
+
+private struct TDSelectorFilter: Encodable {
+    let type = "selector"
+    let dimension: String
+    let value: String
+}
+
+private struct TDRelativeInterval: Encodable {
+    let beginningDate: TDRelativeDate
+    let endDate: TDRelativeDate
+}
+
+private struct TDRelativeDate: Encodable {
+    let component: String
+    let offset: Int
+    let position: String
+}

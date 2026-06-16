@@ -18,12 +18,10 @@ extension APIClient {
             throw APIError.notAuthenticated
         }
 
-        isLoading = true
-        defer { isLoading = false }
+        beginLoading()
+        defer { endLoading() }
 
-        let url = URL(string: "\(baseURL)v3/users/info")!
-        var request = URLRequest(url: url)
-        request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        let request = try authenticatedRequest(path: "v3/users/info", token: token)
 
         let (data, response) = try await URLSession.shared.data(for: request)
 
@@ -38,9 +36,7 @@ extension APIClient {
 
         let user = try JSONDecoder().decode(TDUser.self, from: data)
 
-        await MainActor.run {
-            self.currentUser = user
-        }
+        currentUser = user
     }
 }
 

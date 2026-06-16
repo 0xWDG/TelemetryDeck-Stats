@@ -14,13 +14,14 @@ extension APIClient {
     func login(email: String, password: String) async throws {
         guard !isPreview else { return }
 
-        isLoading = true
-        defer { isLoading = false }
+        beginLoading()
+        defer { endLoading() }
 
-        let url = URL(string: "\(baseURL)v3/users/login")!
-        var request = URLRequest(url: url)
+        var request = try request(path: "v3/users/login")
         request.httpMethod = "POST"
-        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.setValue("application/json", forHTTPHeaderField: "Accept")
+        request.httpBody = Data()
+
         let loginString = "\(email):\(password)"
         guard let loginData = loginString.data(using: .utf8) else {
             throw APIError.authenticationFailed
@@ -41,23 +42,15 @@ extension APIClient {
 
         let loginResponse = try JSONDecoder().decode(TDLoginResponse.self, from: data)
 
-        await MainActor.run {
-            self.authToken = loginResponse.value
-            self.currentUser = loginResponse.user
-
-            Task {
-                try? await fetchUserInfo()
-            }
-        }
+        authToken = loginResponse.value
+        currentUser = loginResponse.user
     }
 
     /// Login with bearer token
     func login(bearerToken: String) async throws {
         guard !isPreview else { return }
 
-        await MainActor.run {
-            self.authToken = bearerToken
-        }
+        authToken = bearerToken
 
         try await fetchUserInfo()
     }

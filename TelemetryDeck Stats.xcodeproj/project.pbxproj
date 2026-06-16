@@ -58,6 +58,7 @@
 				Models/TDLogin.swift,
 				Models/TDOrganization.swift,
 				Models/TDUser.swift,
+				Models/TokenStore.swift,
 			);
 			target = 2BB2D5C92F2E4F8D003535B3 /* TelemetryWidgetExtension */;
 		};

@@ -14,23 +14,18 @@ struct TelemetryDeck_StatsApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
-                // support preview mode, it does not last after restart of the app.
-                .environmentObject(apiClient.isPreview ? APIClient.preview : apiClient)
+                .environmentObject(apiClient)
                 // print automatic login (if possible)
                 .task(autoLogin)
         }
     }
 
-    func autoLogin() {
-        guard let token = UserDefaults.standard.string(forKey: "token") else {
+    func autoLogin() async {
+        guard let token = apiClient.savedToken() else {
             return
         }
 
-        Task {
-            do {
-                try? await apiClient.login(bearerToken: token)
-                try? await apiClient.fetchOrganizations()
-            }
-        }
+        try? await apiClient.login(bearerToken: token)
+        try? await apiClient.fetchOrganizations()
     }
 }

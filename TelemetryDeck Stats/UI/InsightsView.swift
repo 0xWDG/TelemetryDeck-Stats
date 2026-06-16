@@ -12,32 +12,22 @@ struct ChartData: Identifiable {
     let day: Date
     let users: Int
 
-    var id: Int { day.hashValue }
+    var id: Date { day }
 }
 
 struct InsightsView: View {
     @EnvironmentObject var apiClient: APIClient
     let app: TDApp
-    @State private var isLoading = false
     @State private var errorMessage: String?
     @State private var selection: String = "Visitors"
 
-    var data: [ChartData] {
-        (apiClient.insights?.result.rows.map {
-            ChartData(day: $0.timestamp, users: $0.result.Users)
-        }) ?? []
-    }
-
-    let formatter = {
-        var formatter = DateFormatter()
-        formatter.dateStyle = .medium
-        return formatter
-    }()
-
     var body: some View {
+        let data = chartData
+        let stats = chartStats(for: data)
+
         List {
             Chart {
-                ForEach(data, id: \.day) {
+                ForEach(data) {
                     BarMark(
                         x: .value("Date", $0.day, unit: .day),
                         y: .value("Users", $0.users)
@@ -60,7 +50,7 @@ struct InsightsView: View {
                 Section("Uses per day") {
                     ForEach(data) {
                         LabeledContent(
-                            "\($0.day, formatter: formatter)",
+                            $0.day.formatted(date: .abbreviated, time: .omitted),
                             value: $0.users,
                             format: .number
                         )
@@ -72,21 +62,28 @@ struct InsightsView: View {
                 Section("Statistics") {
                     LabeledContent(
                         "Total Users in period",
-                        value: data.reduce(0) { $0 + $1.users },
+                        value: stats.totalUsers,
                         format: .number
                     )
                     LabeledContent(
                         "Average Users per day",
-                        value: Double(data.reduce(0) { $0 + $1.users }) / Double(data.count),
+                        value: stats.averageUsers,
                         format: .number.precision(.fractionLength(0))
                     )
                     // Most active day
-                    if let mostActiveDay = data.max(by: { $0.users < $1.users }) {
+                    if let mostActiveDay = stats.mostActiveDay {
                         LabeledContent(
                             "Most active day",
-                            value: "\(formatter.string(from: mostActiveDay.day)) (\(mostActiveDay.users) users)"
+                            value: "\(mostActiveDay.day.formatted(date: .abbreviated, time: .omitted)) (\(mostActiveDay.users) users)"
                         )
                     }
+                }
+            }
+
+            if let errorMessage {
+                Section("Error") {
+                    Text(errorMessage)
+                        .foregroundStyle(.red)
                 }
             }
         }
@@ -107,22 +104,45 @@ struct InsightsView: View {
             .disabled(data.isEmpty || apiClient.isLoading)
         }
         .refreshable {
-            do {
-                try await apiClient.fetchInsights(appID: app.id)
-            } catch {
-                print("Error", error)
-            }
+            await fetchInsights()
         }
-        .onAppear {
-            Task {
-                do {
-                    try await apiClient.fetchInsights(appID: app.id)
-                } catch {
-                    print("Error", error)
-                }
-            }
+        .task(id: app.id) {
+            await fetchInsights()
         }
     }
+
+    private var chartData: [ChartData] {
+        apiClient.insights(for: app.id)?.result.rows.map {
+            ChartData(day: $0.timestamp, users: $0.result.users)
+        } ?? []
+    }
+
+    private func chartStats(for data: [ChartData]) -> ChartStats {
+        let totalUsers = data.reduce(0) { $0 + $1.users }
+        return ChartStats(
+            totalUsers: totalUsers,
+            averageUsers: data.isEmpty ? 0 : Double(totalUsers) / Double(data.count),
+            mostActiveDay: data.max { $0.users < $1.users }
+        )
+    }
+
+    private func fetchInsights() async {
+        do {
+            try await apiClient.fetchInsights(appID: app.id)
+            errorMessage = nil
+        } catch {
+#if DEBUG
+            print("Error", error)
+#endif
+            errorMessage = error.localizedDescription
+        }
+    }
+}
+
+private struct ChartStats {
+    let totalUsers: Int
+    let averageUsers: Double
+    let mostActiveDay: ChartData?
 }
 
 #Preview {
@@ -139,4 +159,3 @@ struct InsightsView: View {
         .environmentObject(APIClient.preview)
     }
 }
-

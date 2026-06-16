@@ -10,6 +10,7 @@ import Combine
 
 /// API Client for interacting with TelemetryDeck API
 /// API Documentation: https://telemetrydeck.com/docs/api/
+@MainActor
 class APIClient: ObservableObject {
     // MARK: - Properties
 
@@ -19,7 +20,8 @@ class APIClient: ObservableObject {
     @Published var selectedOrganization: TDOrganization?
     @Published var apps: TDApps?
     @Published var insights: TDInsights?
-    @Published var isLoading = false
+    @Published var insightsByAppID: [String: TDInsights] = [:]
+    @Published private(set) var isLoading = false
     @Published var errorMessage: String?
 
     public var isPreview: Bool = false {
@@ -28,16 +30,32 @@ class APIClient: ObservableObject {
         }
     }
 
-    internal let baseURL = "https://api.telemetrydeck.com/api/"
+    internal let baseURL: URL
     internal let defaultTimeout: Duration = .seconds(0.5)
+    private let tokenStore: TokenStoring
+    private var activeRequestCount = 0
+
     internal var authToken: String? {
         didSet {
-            // TODO: In production, store tokens securely in Keychain
-            // See CONFIGURATION.md for keychain implementation examples
-            // Current implementation uses UserDefaults for simplicity
-            UserDefaults.standard.set(authToken, forKey: "token")
+            do {
+                try tokenStore.saveToken(authToken)
+            } catch {
+#if DEBUG
+                print("Failed to save token: \(error)")
+#endif
+            }
             isAuthenticated = authToken != nil
         }
+    }
+
+    init(
+        tokenStore: TokenStoring = KeychainTokenStore(),
+        baseURL: URL = URL(string: "https://api.telemetrydeckapi.com/api/") ?? URL(fileURLWithPath: "/")
+    ) {
+        self.tokenStore = tokenStore
+        self.baseURL = baseURL
+        self.authToken = tokenStore.readToken()
+        self.isAuthenticated = authToken != nil
     }
 
     /// Logout
@@ -49,10 +67,43 @@ class APIClient: ObservableObject {
             selectedOrganization = nil
             apps = nil
             insights = nil
+            insightsByAppID = [:]
         }
 
         isPreview = false
         isAuthenticated = false
+    }
+
+    func savedToken() -> String? {
+        tokenStore.readToken()
+    }
+
+    func insights(for appID: String) -> TDInsights? {
+        insightsByAppID[appID]
+    }
+
+    internal func authenticatedRequest(path: String, token: String) throws -> URLRequest {
+        var request = try request(path: path)
+        request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        return request
+    }
+
+    internal func request(path: String) throws -> URLRequest {
+        guard let url = URL(string: path, relativeTo: baseURL)?.absoluteURL else {
+            throw APIError.invalidURL
+        }
+
+        return URLRequest(url: url)
+    }
+
+    internal func beginLoading() {
+        activeRequestCount += 1
+        isLoading = true
+    }
+
+    internal func endLoading() {
+        activeRequestCount = max(activeRequestCount - 1, 0)
+        isLoading = activeRequestCount > 0
     }
 }
 
@@ -70,6 +121,7 @@ enum APIError: LocalizedError {
     case authenticationFailed
     case requestFailed
     case decodingFailed
+    case invalidURL
 
     var errorDescription: String? {
         switch self {
@@ -81,7 +133,8 @@ enum APIError: LocalizedError {
             return "Request failed. Please try again."
         case .decodingFailed:
             return "Failed to decode response."
+        case .invalidURL:
+            return "The API request URL is invalid."
         }
     }
 }
-

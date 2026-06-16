@@ -27,7 +27,7 @@ struct StatisticsEntry: TimelineEntry, Codable {
 struct StatisticsProvider: TimelineProvider {
     func errorview(in context: Context, error: Error) -> StatisticsEntry {
         StatisticsEntry(
-            date: Date(),
+            date: .now,
             stats: [],
             error: error.localizedDescription
         )
@@ -35,7 +35,7 @@ struct StatisticsProvider: TimelineProvider {
 
     func placeholder(in context: Context) -> StatisticsEntry {
         StatisticsEntry(
-            date: Date(),
+            date: .now,
             stats: [],
             error: nil
         )
@@ -46,7 +46,7 @@ struct StatisticsProvider: TimelineProvider {
         completion: @escaping (StatisticsEntry) -> Void
     ) {
         let entry = StatisticsEntry(
-            date: Date(),
+            date: .now,
             stats: [],
             error: nil
         )
@@ -57,46 +57,13 @@ struct StatisticsProvider: TimelineProvider {
         in context: Context,
         completion: @escaping (Timeline<StatisticsEntry>
         ) -> Void) {
-        // In production, fetch real data from UserDefaults or shared container
-        // For now, use mock data
-        let currentDate = Date()
-
-        Task {
-            do {
-                try await APIClient().fetchInsights(offset: 1)
-            } catch {
-                let entry = errorview(in: context, error: error)
-                let timeline = Timeline(entries: [entry], policy: .never)
-                completion(timeline)
-            }
-        }
-
-        // Check for saved widget configuration
-        //        if let savedData = UserDefaults(
-        //            suiteName: "group.telemetrydeck.viewer"
-        //        )?.data(forKey: "widgetData"),
-        //           let widgetData = try? JSONDecoder().decode(StatisticsEntry.self, from: savedData) {
-        //            let entry = StatisticsEntry(
-        //                date: currentDate,
-        //                appName: widgetData.appName,
-        //                insightTitle: widgetData.insightTitle,
-        //                value: widgetData.value,
-        //                change: widgetData.change
-        //            )
-        //
-        //            // Update every 2 hours
-        //            let nextUpdate = Calendar.current.date(byAdding: .hour, value: 2, to: currentDate)!
-        //            let timeline = Timeline(entries: [entry], policy: .after(nextUpdate))
-        //            completion(timeline)
-        //        } else {
-        // No configuration yet, show placeholder
         let entry = placeholder(in: context)
+        let nextUpdate = Calendar.current.date(byAdding: .hour, value: 2, to: .now) ?? .now.addingTimeInterval(2 * 60 * 60)
         let timeline = Timeline(
             entries: [entry],
-            policy: .never
+            policy: .after(nextUpdate)
         )
         completion(timeline)
-        //        }
     }
 }
 
@@ -116,7 +83,7 @@ struct StatisticsWidgetView: View {
                 default: 5
                 }
 
-                ForEach(0 ..< maxItems) { _ in
+                ForEach(Array(0 ..< maxItems), id: \.self) { _ in
                     LabeledContent {
                         Text("Value")
                     } label: {
@@ -180,14 +147,14 @@ struct TelemetryDeckWidgetPreview: View {
         Group {
             let _ = print("Error?", errorMessage)
             StatisticsWidgetView(entry: StatisticsEntry(
-                date: Date(),
+                date: .now,
                 stats: [],
                 error: errorMessage
             ))
             .previewContext(WidgetPreviewContext(family: .systemMedium))
 
             StatisticsWidgetView(entry: StatisticsEntry(
-                date: Date(),
+                date: .now,
                 stats: [],
                 error: errorMessage
             ))

@@ -33,7 +33,7 @@ struct LoginView: View {
                 
                 Text("View and interact with your TelemetryDeck data")
                     .font(.subheadline)
-                    .foregroundColor(.secondary)
+                    .foregroundStyle(.secondary)
             }
             .padding(.top, 40)
             .padding(.bottom, 20)
@@ -119,13 +119,15 @@ struct LoginView: View {
             VStack(spacing: 8) {
                 Text("Don't have an account?")
                     .font(.footnote)
-                    .foregroundColor(.secondary)
+                    .foregroundStyle(.secondary)
 
-                    Link("Sign up on TelemetryDeck.com", destination: URL(string: "https://dashboard.telemetrydeck.com/register")!)
+                if let registrationURL {
+                    Link("Sign up on TelemetryDeck.com", destination: registrationURL)
+                }
 
-                    Button("Sign in with demo account") {
-                        apiClient.isPreview = true
-                    }
+                Button("Sign in with demo account") {
+                    apiClient.applyPreviewData()
+                }
 
             }
             .font(.footnote)
@@ -157,7 +159,11 @@ TelemetryDeck Viewer is built by [Wesley de Groot](https://wesleydegroot.nl).
     }
     
     private var canLogin: Bool {
-        !email.isEmpty && !password.isEmpty && !isLoading
+        !email.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty && !password.isEmpty && !isLoading
+    }
+
+    private var registrationURL: URL? {
+        URL(string: "https://dashboard.telemetrydeck.com/register")
     }
 
     private func login() {
@@ -189,4 +195,3 @@ TelemetryDeck Viewer is built by [Wesley de Groot](https://wesleydegroot.nl).
     LoginView()
         .environmentObject(APIClient())
 }
-

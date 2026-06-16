@@ -16,12 +16,10 @@ extension APIClient {
             throw APIError.notAuthenticated
         }
 
-        isLoading = true
-        defer { isLoading = false }
+        beginLoading()
+        defer { endLoading() }
 
-        let url = URL(string: "\(baseURL)v3/organizations/\(organizationID)/")!
-        var request = URLRequest(url: url)
-        request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        let request = try authenticatedRequest(path: "v3/organizations/\(organizationID)/", token: token)
 
         let (data, response) = try await URLSession.shared.data(for: request)
 #if DEBUG
@@ -37,9 +35,7 @@ extension APIClient {
 
         print(fetchedApps)
 
-        await MainActor.run {
-            self.apps = fetchedApps
-        }
+        apps = fetchedApps
     }
 }
 
