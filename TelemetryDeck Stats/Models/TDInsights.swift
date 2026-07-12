@@ -64,6 +64,7 @@ extension APIClient {
     func fetchCountries(
         appID: String,
         dataSource: String? = nil,
+        dimension: String = "TelemetryDeck.UserPreference.region",
         offset: Int = 30
     ) async throws {
         guard !isPreview else { return }
@@ -83,7 +84,7 @@ extension APIClient {
         request.httpMethod = "POST"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         request.httpBody = try JSONEncoder().encode(
-            TDCountriesQuery(appID: appID, dataSource: dataSource, offset: offset)
+            TDCountriesQuery(appID: appID, dataSource: dataSource, dimension: dimension, offset: offset)
         )
 
         let (data, response) = try await URLSession.shared.data(for: request)
@@ -167,7 +168,7 @@ struct TDCountryInsight: Decodable, Identifiable {
 
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        countryCode = try container.decode(String.self, forKey: .countryCode)
+        countryCode = try container.decodeIfPresent(String.self, forKey: .countryCode) ?? "Unknown"
         users = Int(try container.decode(Double.self, forKey: .users))
     }
 }
@@ -203,7 +204,7 @@ private struct TDInsightsQuery: Encodable {
 private struct TDCountriesQuery: Encodable {
     let aggregations = [TDAggregation(type: "userCount")]
     let dataSource: String
-    let dimension = TDDimension(dimension: "countryCode", outputName: "countryCode")
+    let dimension: TDDimension
     let filter: TDFilter
     let granularity = "all"
     let metric = TDMetric(metric: "Users")
@@ -212,8 +213,9 @@ private struct TDCountriesQuery: Encodable {
     let testMode = false
     let threshold = 200
 
-    init(appID: String, dataSource: String, offset: Int) {
+    init(appID: String, dataSource: String, dimension: String, offset: Int) {
         self.dataSource = dataSource
+        self.dimension = TDDimension(dimension: dimension, outputName: "countryCode")
         filter = TDFilter(fields: [
             TDSelectorFilter(dimension: "appID", value: appID),
             TDSelectorFilter(dimension: "isTestMode", value: "false")

@@ -157,7 +157,14 @@ struct InsightsView: View {
     private func fetchSelectedInsights() async {
         do {
             if selection == "Countries" {
-                try await apiClient.fetchCountries(appID: app.id, dataSource: apiClient.apps?.namespace)
+                let countryDimension = app.settings.displayMode == "app"
+                    ? "TelemetryDeck.UserPreference.region"
+                    : "country.isoCode"
+                try await apiClient.fetchCountries(
+                    appID: app.id,
+                    dataSource: apiClient.apps?.namespace,
+                    dimension: countryDimension
+                )
             } else {
                 try await apiClient.fetchInsights(appID: app.id, dataSource: apiClient.apps?.namespace)
             }
