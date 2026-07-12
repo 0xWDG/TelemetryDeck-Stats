@@ -1,0 +1,799 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		2B3F854B2F294FFE00D5DBBC /* SwiftExtras in Frameworks */ = {isa = PBXBuildFile; productRef = 2B3F854A2F294FFE00D5DBBC /* SwiftExtras */; };
+		2BB2D5CD2F2E4F8D003535B3 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2BB2D5CC2F2E4F8D003535B3 /* WidgetKit.framework */; };
+		2BB2D5CF2F2E4F8D003535B3 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2BB2D5CE2F2E4F8D003535B3 /* SwiftUI.framework */; };
+		2BD80A2C2F2E55DE00B2B1ED /* SwiftExtras in Frameworks */ = {isa = PBXBuildFile; productRef = 2BD80A2B2F2E55DE00B2B1ED /* SwiftExtras */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		2B5619552F26AC1E008E5A67 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 2B56193F2F26AC1C008E5A67 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 2B5619462F26AC1C008E5A67;
+			remoteInfo = "TelemetryDeck Stats";
+		};
+		2B56195F2F26AC1E008E5A67 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 2B56193F2F26AC1C008E5A67 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 2B5619462F26AC1C008E5A67;
+			remoteInfo = "TelemetryDeck Stats";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		2B5619472F26AC1C008E5A67 /* TelemetryDeck Stats.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "TelemetryDeck Stats.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		2B5619542F26AC1E008E5A67 /* TelemetryDeck StatsTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "TelemetryDeck StatsTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		2B56195E2F26AC1E008E5A67 /* TelemetryDeck StatsUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "TelemetryDeck StatsUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		2BB2D5CA2F2E4F8D003535B3 /* TelemetryWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = TelemetryWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		2BB2D5CC2F2E4F8D003535B3 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
+		2BB2D5CE2F2E4F8D003535B3 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
+		2BD80A902F2E613100B2B1ED /* TelemetryWidgetExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = TelemetryWidgetExtension.entitlements; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		2BB2D5DB2F2E4F8E003535B3 /* Exceptions for "TelemetryWidget" folder in "TelemetryWidgetExtension" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 2BB2D5C92F2E4F8D003535B3 /* TelemetryWidgetExtension */;
+		};
+		2BD80A242F2E54F100B2B1ED /* Exceptions for "TelemetryDeck Stats" folder in "TelemetryWidgetExtension" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Models/APIClient.swift,
+				Models/APIPreview.swift,
+				Models/TDApps.swift,
+				Models/TDInsights.swift,
+				Models/TDLogin.swift,
+				Models/TDOrganization.swift,
+				Models/TDUser.swift,
+				Models/TokenStore.swift,
+			);
+			target = 2BB2D5C92F2E4F8D003535B3 /* TelemetryWidgetExtension */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		2B5619492F26AC1C008E5A67 /* TelemetryDeck Stats */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				2BD80A242F2E54F100B2B1ED /* Exceptions for "TelemetryDeck Stats" folder in "TelemetryWidgetExtension" target */,
+			);
+			path = "TelemetryDeck Stats";
+			sourceTree = "<group>";
+		};
+		2B5619572F26AC1E008E5A67 /* TelemetryDeck StatsTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = "TelemetryDeck StatsTests";
+			sourceTree = "<group>";
+		};
+		2B5619612F26AC1E008E5A67 /* TelemetryDeck StatsUITests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = "TelemetryDeck StatsUITests";
+			sourceTree = "<group>";
+		};
+		2BB2D5D02F2E4F8D003535B3 /* TelemetryWidget */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				2BB2D5DB2F2E4F8E003535B3 /* Exceptions for "TelemetryWidget" folder in "TelemetryWidgetExtension" target */,
+			);
+			path = TelemetryWidget;
+			sourceTree = "<group>";
+		};
+/* End PBXFileSystemSynchronizedRootGroup section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		2B5619442F26AC1C008E5A67 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2B3F854B2F294FFE00D5DBBC /* SwiftExtras in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2B5619512F26AC1E008E5A67 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2B56195B2F26AC1E008E5A67 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2BB2D5C72F2E4F8D003535B3 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2BB2D5CF2F2E4F8D003535B3 /* SwiftUI.framework in Frameworks */,
+				2BD80A2C2F2E55DE00B2B1ED /* SwiftExtras in Frameworks */,
+				2BB2D5CD2F2E4F8D003535B3 /* WidgetKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		2B56193E2F26AC1C008E5A67 = {
+			isa = PBXGroup;
+			children = (
+				2BD80A902F2E613100B2B1ED /* TelemetryWidgetExtension.entitlements */,
+				2B5619492F26AC1C008E5A67 /* TelemetryDeck Stats */,
+				2B5619572F26AC1E008E5A67 /* TelemetryDeck StatsTests */,
+				2B5619612F26AC1E008E5A67 /* TelemetryDeck StatsUITests */,
+				2BB2D5D02F2E4F8D003535B3 /* TelemetryWidget */,
+				2BB2D5CB2F2E4F8D003535B3 /* Frameworks */,
+				2B5619482F26AC1C008E5A67 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		2B5619482F26AC1C008E5A67 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				2B5619472F26AC1C008E5A67 /* TelemetryDeck Stats.app */,
+				2B5619542F26AC1E008E5A67 /* TelemetryDeck StatsTests.xctest */,
+				2B56195E2F26AC1E008E5A67 /* TelemetryDeck StatsUITests.xctest */,
+				2BB2D5CA2F2E4F8D003535B3 /* TelemetryWidgetExtension.appex */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		2BB2D5CB2F2E4F8D003535B3 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				2BB2D5CC2F2E4F8D003535B3 /* WidgetKit.framework */,
+				2BB2D5CE2F2E4F8D003535B3 /* SwiftUI.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		2B5619462F26AC1C008E5A67 /* TelemetryDeck Stats */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2B5619682F26AC1E008E5A67 /* Build configuration list for PBXNativeTarget "TelemetryDeck Stats" */;
+			buildPhases = (
+				2B5619432F26AC1C008E5A67 /* Sources */,
+				2B5619442F26AC1C008E5A67 /* Frameworks */,
+				2B5619452F26AC1C008E5A67 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				2B5619492F26AC1C008E5A67 /* TelemetryDeck Stats */,
+			);
+			name = "TelemetryDeck Stats";
+			packageProductDependencies = (
+				2B3F854A2F294FFE00D5DBBC /* SwiftExtras */,
+			);
+			productName = "TelemetryDeck Stats";
+			productReference = 2B5619472F26AC1C008E5A67 /* TelemetryDeck Stats.app */;
+			productType = "com.apple.product-type.application";
+		};
+		2B5619532F26AC1E008E5A67 /* TelemetryDeck StatsTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2B56196B2F26AC1E008E5A67 /* Build configuration list for PBXNativeTarget "TelemetryDeck StatsTests" */;
+			buildPhases = (
+				2B5619502F26AC1E008E5A67 /* Sources */,
+				2B5619512F26AC1E008E5A67 /* Frameworks */,
+				2B5619522F26AC1E008E5A67 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				2B5619562F26AC1E008E5A67 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				2B5619572F26AC1E008E5A67 /* TelemetryDeck StatsTests */,
+			);
+			name = "TelemetryDeck StatsTests";
+			packageProductDependencies = (
+			);
+			productName = "TelemetryDeck StatsTests";
+			productReference = 2B5619542F26AC1E008E5A67 /* TelemetryDeck StatsTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		2B56195D2F26AC1E008E5A67 /* TelemetryDeck StatsUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2B56196E2F26AC1E008E5A67 /* Build configuration list for PBXNativeTarget "TelemetryDeck StatsUITests" */;
+			buildPhases = (
+				2B56195A2F26AC1E008E5A67 /* Sources */,
+				2B56195B2F26AC1E008E5A67 /* Frameworks */,
+				2B56195C2F26AC1E008E5A67 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				2B5619602F26AC1E008E5A67 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				2B5619612F26AC1E008E5A67 /* TelemetryDeck StatsUITests */,
+			);
+			name = "TelemetryDeck StatsUITests";
+			packageProductDependencies = (
+			);
+			productName = "TelemetryDeck StatsUITests";
+			productReference = 2B56195E2F26AC1E008E5A67 /* TelemetryDeck StatsUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+		2BB2D5C92F2E4F8D003535B3 /* TelemetryWidgetExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2BB2D5DC2F2E4F8E003535B3 /* Build configuration list for PBXNativeTarget "TelemetryWidgetExtension" */;
+			buildPhases = (
+				2BB2D5C62F2E4F8D003535B3 /* Sources */,
+				2BB2D5C72F2E4F8D003535B3 /* Frameworks */,
+				2BB2D5C82F2E4F8D003535B3 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				2BB2D5D02F2E4F8D003535B3 /* TelemetryWidget */,
+			);
+			name = TelemetryWidgetExtension;
+			packageProductDependencies = (
+				2BD80A2B2F2E55DE00B2B1ED /* SwiftExtras */,
+			);
+			productName = TelemetryWidgetExtension;
+			productReference = 2BB2D5CA2F2E4F8D003535B3 /* TelemetryWidgetExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		2B56193F2F26AC1C008E5A67 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 2620;
+				LastUpgradeCheck = 2700;
+				TargetAttributes = {
+					2B5619462F26AC1C008E5A67 = {
+						CreatedOnToolsVersion = 26.2;
+					};
+					2B5619532F26AC1E008E5A67 = {
+						CreatedOnToolsVersion = 26.2;
+						TestTargetID = 2B5619462F26AC1C008E5A67;
+					};
+					2B56195D2F26AC1E008E5A67 = {
+						CreatedOnToolsVersion = 26.2;
+						TestTargetID = 2B5619462F26AC1C008E5A67;
+					};
+					2BB2D5C92F2E4F8D003535B3 = {
+						CreatedOnToolsVersion = 26.2;
+					};
+				};
+			};
+			buildConfigurationList = 2B5619422F26AC1C008E5A67 /* Build configuration list for PBXProject "TelemetryDeck Stats" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 2B56193E2F26AC1C008E5A67;
+			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				2B3F85492F294FFE00D5DBBC /* XCRemoteSwiftPackageReference "SwiftExtras" */,
+			);
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 2B5619482F26AC1C008E5A67 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				2B5619462F26AC1C008E5A67 /* TelemetryDeck Stats */,
+				2B5619532F26AC1E008E5A67 /* TelemetryDeck StatsTests */,
+				2B56195D2F26AC1E008E5A67 /* TelemetryDeck StatsUITests */,
+				2BB2D5C92F2E4F8D003535B3 /* TelemetryWidgetExtension */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		2B5619452F26AC1C008E5A67 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2B5619522F26AC1E008E5A67 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2B56195C2F26AC1E008E5A67 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2BB2D5C82F2E4F8D003535B3 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		2B5619432F26AC1C008E5A67 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2B5619502F26AC1E008E5A67 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2B56195A2F26AC1E008E5A67 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2BB2D5C62F2E4F8D003535B3 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		2B5619562F26AC1E008E5A67 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 2B5619462F26AC1C008E5A67 /* TelemetryDeck Stats */;
+			targetProxy = 2B5619552F26AC1E008E5A67 /* PBXContainerItemProxy */;
+		};
+		2B5619602F26AC1E008E5A67 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 2B5619462F26AC1C008E5A67 /* TelemetryDeck Stats */;
+			targetProxy = 2B56195F2F26AC1E008E5A67 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		2B5619662F26AC1E008E5A67 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = 4V2D72S45C;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.2;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		2B5619672F26AC1E008E5A67 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = 4V2D72S45C;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.2;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		2B5619692F26AC1E008E5A67 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "TelemetryDeck Stats/TelemetryDeck Stats.entitlements";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 4V2D72S45C;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = nl.wesleydegroot.TelemetryDeckStats;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		2B56196A2F26AC1E008E5A67 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "TelemetryDeck Stats/TelemetryDeck Stats.entitlements";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 4V2D72S45C;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = nl.wesleydegroot.TelemetryDeckStats;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		2B56196C2F26AC1E008E5A67 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 4V2D72S45C;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.2;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = nl.wesleydegroot.TelemetryDeckStatsTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/TelemetryDeck Stats.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/TelemetryDeck Stats";
+			};
+			name = Debug;
+		};
+		2B56196D2F26AC1E008E5A67 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 4V2D72S45C;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.2;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = nl.wesleydegroot.TelemetryDeckStatsTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/TelemetryDeck Stats.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/TelemetryDeck Stats";
+			};
+			name = Release;
+		};
+		2B56196F2F26AC1E008E5A67 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 4V2D72S45C;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = nl.wesleydegroot.TelemetryDeckStatsUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = "TelemetryDeck Stats";
+			};
+			name = Debug;
+		};
+		2B5619702F26AC1E008E5A67 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 4V2D72S45C;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = nl.wesleydegroot.TelemetryDeckStatsUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = "TelemetryDeck Stats";
+			};
+			name = Release;
+		};
+		2BB2D5DD2F2E4F8E003535B3 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_ENTITLEMENTS = TelemetryWidgetExtension.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 4V2D72S45C;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = TelemetryWidget/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = TelemetryWidget;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = nl.wesleydegroot.TelemetryDeckStats.Widget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		2BB2D5DE2F2E4F8E003535B3 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_ENTITLEMENTS = TelemetryWidgetExtension.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 4V2D72S45C;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = TelemetryWidget/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = TelemetryWidget;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = nl.wesleydegroot.TelemetryDeckStats.Widget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		2B5619422F26AC1C008E5A67 /* Build configuration list for PBXProject "TelemetryDeck Stats" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2B5619662F26AC1E008E5A67 /* Debug */,
+				2B5619672F26AC1E008E5A67 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		2B5619682F26AC1E008E5A67 /* Build configuration list for PBXNativeTarget "TelemetryDeck Stats" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2B5619692F26AC1E008E5A67 /* Debug */,
+				2B56196A2F26AC1E008E5A67 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		2B56196B2F26AC1E008E5A67 /* Build configuration list for PBXNativeTarget "TelemetryDeck StatsTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2B56196C2F26AC1E008E5A67 /* Debug */,
+				2B56196D2F26AC1E008E5A67 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		2B56196E2F26AC1E008E5A67 /* Build configuration list for PBXNativeTarget "TelemetryDeck StatsUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2B56196F2F26AC1E008E5A67 /* Debug */,
+				2B5619702F26AC1E008E5A67 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		2BB2D5DC2F2E4F8E003535B3 /* Build configuration list for PBXNativeTarget "TelemetryWidgetExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2BB2D5DD2F2E4F8E003535B3 /* Debug */,
+				2BB2D5DE2F2E4F8E003535B3 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		2B3F85492F294FFE00D5DBBC /* XCRemoteSwiftPackageReference "SwiftExtras" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/0xWDG/SwiftExtras";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		2B3F854A2F294FFE00D5DBBC /* SwiftExtras */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2B3F85492F294FFE00D5DBBC /* XCRemoteSwiftPackageReference "SwiftExtras" */;
+			productName = SwiftExtras;
+		};
+		2BD80A2B2F2E55DE00B2B1ED /* SwiftExtras */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2B3F85492F294FFE00D5DBBC /* XCRemoteSwiftPackageReference "SwiftExtras" */;
+			productName = SwiftExtras;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = 2B56193F2F26AC1C008E5A67 /* Project object */;
+}
