@@ -15,6 +15,8 @@ struct KeychainTokenStore: TokenStoring {
     private let service = "nl.wesleydegroot.TelemetryDeckStats"
     private let account = "api-token"
 
+    nonisolated init() { }
+
     func readToken() -> String? {
         var query = baseQuery
         query[kSecReturnData as String] = true
