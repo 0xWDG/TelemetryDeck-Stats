@@ -1,0 +1,9 @@
+{
+  "id" : "93c00a94-0726-43d3-af13-89aa9b9dfedb",
+  "targets" : [
+    {
+      "id" : "b256cdc8-1abe-40e5-8a16-e04753ea130d",
+      "name" : "TelemetryDeck Stats"
+    }
+  ]
+}

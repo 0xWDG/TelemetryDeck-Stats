@@ -1,0 +1,24 @@
+{
+  "originHash" : "6a9b1948749c5f20965eed12f652f56b91d0992a7ff80637b88ee90e4237cb0e",
+  "pins" : [
+    {
+      "identity" : "oslogviewer",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/0xWDG/OSLogViewer.git",
+      "state" : {
+        "branch" : "main",
+        "revision" : "3786a25c010e94874f47b49eb17c0beb49c52c7e"
+      }
+    },
+    {
+      "identity" : "swiftextras",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/0xWDG/SwiftExtras",
+      "state" : {
+        "branch" : "main",
+        "revision" : "e718bed9ee3aac4c9563da22b98a1fac48feb8e0"
+      }
+    }
+  ],
+  "version" : 3
+}
